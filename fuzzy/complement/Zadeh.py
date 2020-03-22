@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,24 +9,25 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 """Complement after Zadeh"""
-__revision__ = "$Id: Zadeh.py,v 1.2 2009/10/07 21:08:14 rliebscher Exp $"
+__revision__ = "$Id: Zadeh.py,v 1.6 2010-10-29 19:24:41 rliebscher Exp $"
 
 from fuzzy.complement.Base import Base
 
-class Zadeh(Base):
+class Zadeh(Base): # pylint: disable=R0903
     """Complement after Zadeh"""
 
-    def __init__(self,*args,**keywords):
+    def __init__(self, *args, **keywords):
         """Initialize the complement instance"""
-        super(Zadeh, self).__init__(*args,**keywords)
+        super(Zadeh, self).__init__(*args, **keywords)
 
-    def __call__(self,value):
+    def __call__(self, value):
         """calculate the complement of the value
         @param value: the value to complement
         @type value: float

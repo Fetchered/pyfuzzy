@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,13 +9,14 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 """Complement after Sugeno"""
-__revision__ = "$Id: Sugeno.py,v 1.3 2009/10/07 21:08:14 rliebscher Exp $"
+__revision__ = "$Id: Sugeno.py,v 1.7 2010-03-28 18:39:02 rliebscher Exp $"
 
 from fuzzy.complement.Parametric import Parametric
 from fuzzy.utils import inf_p
@@ -23,20 +24,28 @@ from fuzzy.utils import inf_p
 class Sugeno(Parametric):
     """Complement after Sugeno"""
 
-    _range = [ (-1.,inf_p) ]
+    _range = [ (-1., inf_p) ]
 
-    def __init__(self,lambda_=0.,*args,**keywords):
+    def __init__(self, lambda_=0., *args, **keywords):
         """Initialize instance with given parameter
         @param lambda_: The parameter
         @type lambda_: float  
         """
-        super(Sugeno, self).__init__(lambda_,*args,**keywords)
+        super(Sugeno, self).__init__(lambda_, *args, **keywords)
 
-    def __call__(self,value):
+    def __call__(self, value):
         """calculate the complement of the value
         @param value: the value to complement
         @type value: float
         @return: the complemented value
         @rtype: float  
         """
-        return (1.-float(value))/(1.+self._p*float(value))
+        return (1.-float(value))/(1.+self.p*float(value))
+
+    def __repr__(self):
+        """Return representation of instance.
+                   
+           @return: representation of instance
+           @rtype: string
+           """
+        return "%s.%s(lambda_=%s)" % (self.__class__.__module__, self.__class__.__name__, self.p)
