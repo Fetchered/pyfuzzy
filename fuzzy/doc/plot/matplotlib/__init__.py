@@ -15,6 +15,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
-"""Generate documentation by plotting some parts of the system"""
-
+"""Documentation
+"""
 __revision__ = "$Id: __init__.py,v 1.4 2009-10-27 20:06:27 rliebscher Exp $"
