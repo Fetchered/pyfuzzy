@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,13 +9,16 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: Function.py,v 1.9 2009/08/07 07:19:19 rliebscher Exp $"
+"""Base class for any fuzzy set defined by a function (not a polygon)."""
+
+__revision__ = "$Id: Function.py,v 1.13 2010-03-28 18:44:46 rliebscher Exp $"
 
 
 from fuzzy.set.Set import Set
@@ -23,6 +26,6 @@ from fuzzy.set.Set import Set
 class Function(Set):
     """Base class for any fuzzy set defined by a function (not a polygon)."""
 
-    # if converted if linear polygon form use
+    # if converted in linear polygon form use
     # at least x pieces
     _resolution = 25 #: segments when converting into a polygon

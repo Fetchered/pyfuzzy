@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,17 +9,21 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: Triangle.py,v 1.13 2009/08/07 07:19:19 rliebscher Exp $"
+"""Realize a triangle-shaped fuzzy set."""
+
+__revision__ = "$Id: Triangle.py,v 1.20 2010-10-29 19:24:41 rliebscher Exp $"
 
 
 from fuzzy.set.Polygon import Polygon
 from fuzzy.utils import prop
+from fuzzy.Exception import FuzzyException
 
 class Triangle(Polygon):
     r"""Realize a triangle-shaped fuzzy set::
@@ -33,10 +37,10 @@ class Triangle(Polygon):
           |   |   |
          alpha|beta
 
-    See also U{http://pyfuzzy.sourceforge.net/test/set/Triangle.png}
+    See also U{http://pyfuzzy.sourceforge.net/demo/set/Triangle.png}
     """
 
-    def __init__(self,m=0.0,alpha=1.0,beta=1.0,y_max=1.0,y_min=0.0):
+    def __init__(self, m=0.0, alpha=1.0, beta=1.0, y_max=1.0, y_min=0.0):
         """
         Initialize a triangle-shaped fuzzy set.
 
@@ -47,65 +51,70 @@ class Triangle(Polygon):
         @param beta:   distance of right corner to m (1.0)
         """
         super(Triangle, self).__init__()
-        self._y_max = y_max
-        self._y_min = y_min
-        self._m = m
-        self._alpha = alpha
-        self._beta = beta
+        self._y_max = float(y_max)
+        self._y_min = float(y_min)
+        self._m = float(m)
+        self._alpha = float(alpha)
+        self._beta = float(beta)
         self._update() # update polygon
 
+    # pylint: disable=E0211,W0212
     @prop
-    def y_max():
+    def y_max(): #@NoSelf
         """y-value at top of the triangle
         @type: float"""
-        def fget(self):
+        def fget(self): # pylint: disable=W0612,C0111
             return self._y_max
-        def fset(self,value):
-            self._y_max = value
+        def fset(self, value): # pylint: disable=W0612,C0111
+            self._y_max = float(value)
             self._update()
         return locals()
 
+    # pylint: disable=E0211,W0212
     @prop
-    def y_min():
+    def y_min(): #@NoSelf
         """y-value outside the triangle
         @type: float"""
-        def fget(self):
+        def fget(self): # pylint: disable=W0612,C0111
             return self._y_min
-        def fset(self,value):
-            self._y_min = value
+        def fset(self, value): # pylint: disable=W0612,C0111
+            self._y_min = float(value)
             self._update()
         return locals()
 
+    # pylint: disable=E0211,W0212
     @prop
-    def m():
+    def m(): #@NoSelf
         """x-value of top of triangle
         @type: float"""
-        def fget(self):
+        def fget(self): # pylint: disable=W0612,C0111
             return self._m
-        def fset(self,value):
-            self._m = value
+        def fset(self, value): # pylint: disable=W0612,C0111
+            self._m = float(value)
             self._update()
         return locals()
 
+    # pylint: disable=E0211,W0212
     @prop
-    def alpha():
+    def alpha(): #@NoSelf
         """distance of left corner to m
         @type: float"""
-        def fget(self):
+        def fget(self): # pylint: disable=W0612,C0111
             return self._alpha
-        def fset(self,value):
-            self._alpha = value
+        def fset(self, value): # pylint: disable=W0612,C0111
+            self._alpha = float(value)
             self._update()
         return locals()
 
+    # pylint: disable=E0211,W0212
     @prop
-    def beta():
+    def beta(): #@NoSelf
         """distance of right corner to m
         @type: float"""
-        def fget(self):
+        def fget(self): # pylint: disable=W0612,C0111
             return self._beta
-        def fset(self,value):
-            self._beta = value
+        def fset(self, value): # pylint: disable=W0612,C0111
+            self._beta = float(value)
             self._update()
         return locals()
 
@@ -113,19 +122,34 @@ class Triangle(Polygon):
         """update polygon"""
         p = super(Triangle, self)
         p.clear()
-        p.add(self._m-self._alpha,self._y_min)
-        p.add(self._m,self._y_max)
-        p.add(self._m+self._beta,self._y_min)
+        p.add(self._m-self._alpha, self._y_min)
+        p.add(self._m, self._y_max)
+        p.add(self._m+self._beta, self._y_min)
 
-    def add(self,x,y,where=Polygon.END):
+    def add(self, x, y, where=Polygon.END):
         """Don't let anyone destroy our triangle."""
-        raise Exception()
+        raise FuzzyException()
 
-    def remove(self,x,where=Polygon.END):
+    def remove(self, x, where=Polygon.END):
         """Don't let anyone destroy our triangle."""
-        raise Exception()
+        raise FuzzyException()
 
     def clear(self):
         """Don't let anyone destroy our triangle."""
-        raise Exception()
+        raise FuzzyException()
 
+    def __repr__(self):
+        """Return representation of instance.
+                   
+           @return: representation of instance
+           @rtype: string
+           """
+        return "%s.%s(m=%s, alpha=%s, beta=%s, y_max=%s, y_min=%s)" % (
+                self.__class__.__module__,
+                self.__class__.__name__,
+                self._m,
+                self._alpha,
+                self._beta,
+                self._y_max,
+                self._y_min,
+            )

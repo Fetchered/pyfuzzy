@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,13 +9,16 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: SFunction.py,v 1.14 2009/08/31 21:02:06 rliebscher Exp $"
+"""Realize a S-shaped fuzzy set."""
+
+__revision__ = "$Id: SFunction.py,v 1.19 2010-03-28 18:44:46 rliebscher Exp $"
 
 
 from fuzzy.set.Function import Function
@@ -30,9 +33,9 @@ class SFunction(Function):
             _/ | |
              | a |
              |   |
-             delta
+            2*delta
 
-    See also U{http://pyfuzzy.sourceforge.net/test/set/SFunction.png}
+    See also U{http://pyfuzzy.sourceforge.net/demo/set/SFunction.png}
     
     @ivar a: center of set.
     @type a: float
@@ -40,7 +43,7 @@ class SFunction(Function):
     @type delta: float
     """
 
-    def __init__(self,a=0.0,delta=1.0):
+    def __init__(self, a=0.0, delta=1.0):
         """Initialize a S-shaped fuzzy set.
 
         @param a: center of set
@@ -52,7 +55,7 @@ class SFunction(Function):
         self.a = a
         self.delta = delta
 
-    def __call__(self,x):
+    def __call__(self, x):
         """Return membership of x in this fuzzy set.
            This method makes the set work like a function.
            
@@ -75,35 +78,24 @@ class SFunction(Function):
 
     def getCOG(self):
         """Return center of gravity."""
-        raise Exception("COG of SFunction uncalculable")
+        from fuzzy.Exception import FuzzyException
+        raise FuzzyException("COG of SFunction uncalculable")
 
-    class __IntervalGenerator(Function.IntervalGenerator):
-        def __init__(self,set):
-            self.set = set
+    def getValuesX(self):
+        """Return sequence of x-values so we get a smooth function."""
+        a = self.a
+        d = self.delta
+        stepsize = 2. * d / Function._resolution
+        x = a - d
+        for _ in range(Function._resolution):
+            yield x
+            x += stepsize
+        yield a + d
 
-        def nextInterval(self,prev,next):
-            a = self.set.a
-            d = self.set.delta
-            if prev is None:
-                if next is None:
-                    return a-d
-                else:
-                    return min(next,a-d)
-            else:
-                # right of our area of interest
-                if prev >= a+d:
-                    return next
-                else:
-                    # maximal interval length
-                    stepsize = 2.0*d/Function._resolution
-                    if next is None:
-                        return min(a+d,prev + stepsize)
-                    else:
-                        if next - prev > stepsize:
-                            # split interval in n equal sized interval of length < stepsize
-                            return min(a+d,prev+(next-prev)/(int((next-prev)/stepsize)+1.0))
-                        else:
-                            return next
-
-    def getIntervalGenerator(self):
-        return self.__IntervalGenerator(self)
+    def __repr__(self):
+        """Return representation of instance.
+                   
+           @return: representation of instance
+           @rtype: string
+           """
+        return "%s.%s(a=%s, delta=%s)" % (self.__class__.__module__, self.__class__.__name__, self.a, self.delta)

@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,13 +9,16 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: PiFunction.py,v 1.13 2009/08/07 07:19:19 rliebscher Exp $"
+"""Realize a Pi-shaped fuzzy set"""
+
+__revision__ = "$Id: PiFunction.py,v 1.19 2010-03-28 18:44:46 rliebscher Exp $"
 
 
 from fuzzy.set.Function import Function
@@ -32,9 +35,9 @@ class PiFunction(Function):
             _/  |  \_
              |  a  |
              |     |
-             2*delta
+              delta
 
-    See also U{http://pyfuzzy.sourceforge.net/test/set/PiFunction.png}
+    See also U{http://pyfuzzy.sourceforge.net/demo/set/PiFunction.png}
 
     
     @ivar a: center of set.
@@ -43,7 +46,7 @@ class PiFunction(Function):
     @type delta: float
     """
 
-    def __init__(self,a=0.0,delta=1.0):
+    def __init__(self, a=0.0, delta=1.0):
         """Initialize a Pi-shaped fuzzy set.
 
         @param a: center of set
@@ -51,11 +54,13 @@ class PiFunction(Function):
         @param delta: absolute distance between x-values for minimum and maximum
         @type delta: float
         """
-        super(PiFunction,self).__init__()
+        super(PiFunction, self).__init__()
         self.a = a
         self.delta = delta
+        self._sfunction = SFunction(a - delta/2., delta/2)
+        self._zfunction = ZFunction(a + delta/2., delta/2)
 
-    def __call__(self,x):
+    def __call__(self, x):
         """Return membership of x in this fuzzy set.
            This method makes the set work like a function.
            
@@ -64,49 +69,32 @@ class PiFunction(Function):
            @return: membership
            @rtype: float
            """
-        a = self.a
-        d = self.delta/2.0
-        if x < a:
-            return SFunction(a-d,d)(x)
+        if x < self.a:
+            return self._sfunction(x)
         else:
-            return ZFunction(a+d,d)(x)
+            return self._zfunction(x)
 
     def getCOG(self):
         """Return center of gravity."""
         return self.a
 
-    class __IntervalGenerator(Function.IntervalGenerator):
-        def __init__(self,set):
-            self.set = set
-
-        def nextInterval(self,prev,next):
-            a = self.set.a
-            d = self.set.delta
-            if prev is None:
-                if next is None:
-                    return a-d
-                else:
-                    return min(next,a-d)
+    def getValuesX(self):
+        """Return sequence of x-values so we get a smooth function."""
+        for x in self._sfunction.getValuesX():
+            yield x
+        # first value is equal the last of the previous sequence    
+        skippedFirst = False 
+        for x in self._zfunction.getValuesX():
+            if not skippedFirst:
+                skippedFirst = True
             else:
-                # right of our area of interest
-                if prev >= a+d:
-                    return next
-                else:
-                    # dont forget we have a maximum
-                    if prev >= a:
-                        consider_this = a + d
-                    else:
-                        consider_this = a
-                    # maximal interval length
-                    stepsize = d/Function._resolution
-                    if next is None:
-                        return min(consider_this,prev + stepsize)
-                    else:
-                        if next - prev > stepsize:
-                            # split interval in n equal sized interval of length < stepsize
-                            return min(consider_this,prev+(next-prev)/(int((next-prev)/stepsize)+1.0))
-                        else:
-                            return next
+                yield x
 
-    def getIntervalGenerator(self):
-        return self.__IntervalGenerator(self)
+    def __repr__(self):
+        """Return representation of instance.
+                   
+           @return: representation of instance
+           @rtype: string
+           """
+        return "%s.%s(a=%s, delta=%s)" % (self.__class__.__module__, self.__class__.__name__, self.a, self.delta)
+        

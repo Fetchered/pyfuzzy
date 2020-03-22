@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,15 +9,16 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
-# 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>.
 #
 """
 Helper functions for calculation with fuzzy sets.
 
-Examples can be found here U{http://pyfuzzy.sourceforge.net/test/merge/}
+Examples can be found here U{http://pyfuzzy.sourceforge.net/demo/merge/}
 
 * Intersection of set1 and set2 can be done by
   
@@ -51,54 +52,200 @@ Examples can be found here U{http://pyfuzzy.sourceforge.net/test/merge/}
   and act_value is the result of a rule calculation.
 """
 
-__revision__ = "$Id: operations.py,v 1.5 2009/09/24 20:32:20 rliebscher Exp $"
+__revision__ = "$Id: operations.py,v 1.13 2013-01-09 20:10:19 rliebscher Exp $"
+
+from fuzzy.Exception import FuzzyException
 
 # helper functions
-def _find_null_steffensen(x,f,epsilon=None):
-    """Find zero of function f by using the Steffensen method.
-       As fixpoint equation M{g(x) = x - f(x)} is used.
+def _find_root(f, x1, x2, f1=None, f2=None, epsilon=None):
+    """Find root of function f between x1,x2 by using the regula falsi method
+       with the pegasus modification.
+       See also U{http://de.wikipedia.org/wiki/Regula_Falsi}. (The english
+       version lacks the description of pegasus modification.)
        The algorithm stops if the error estimation is smaller than epsilon
-       or the convergence quotient is larger than 1.0 (for at least two steps)
-       or there is an ZeroDivisionError, which means in the last steps
-       nothing changed.
-
-       Normally the number of correct digits doubles each step, which
-       means for 64 bits it needs not more than 6-7 steps for an
-       arbitrary function.
+       or there is an ZeroDivisionError, which means both values f1 and f2 are
+       identical (should be 0 then).
        
-       
-       @param x: first estimation of result
-       @type x: float
        @param f: function for which to find M{f(x)=0}
        @type f: M{f(x)}
+       @param x1: left border of range
+       @type x1: float
+       @param x2: right border of range
+       @type x2: float
+       @param f1: value for x1, if available
+       @type f1: float
+       @param f2: value for x2, if available
+       @type f2: float
        @param epsilon: break condition for algorithm (value < epsilon)
        @type epsilon: float/None
        @return: M{x} where M{f(x)=0}
        @rtype: float
     """
-    g = lambda x,f=f: x-f(x)
-    x_2,x_1,x_0 = None,None,x
-    q_0,q_1 = 0.0,0.0
-    while abs(q_0)<1.0 or abs(q_1)<1.0:
-        y0 = x_0
-        y1 = g(y0)
-        y2 = g(y1)
+    if f1 is None:
+        f1 = f(x1)
+    if f2 is None:
+        f2 = f(x2)
+    if f1 * f2 > 0.:
+        raise FuzzyException("need interval with root")
+    if epsilon is None:
+        epsilon = 1.e-10
+    epsx = epsz = epsilon
+    z = (x1+x2)/2.
+    try:
+        i = 0
+        while i < 1000:
+            i += 1
+            z = x1 - f1 * (x2 - x1) / (f2 - f1) # approximation for root
+            fz = f(z)
+
+            #print x1,z,x2,f1,fz,f2
+            # smaller than epsilon: return z as approximation
+            if abs(x2 - x1) <= epsx or abs(fz) <= epsz:
+                return z
+
+            # root in [f(xz), f(x2)]?:
+            if fz * f2 < 0.:
+                # check [z, x2], but exchange borders
+                x1,x2,f1,f2 = x2,z,f2,fz
+            else:
+                # check [x1, z], and modify the value f1,
+                # so next steps x1 will move
+                x1,x2,f1,f2 = x1,z,f1*f2/(f2+fz),fz
+        raise FuzzyException("Too much iterations: %d" % i)
+    except ZeroDivisionError:
+        #print "ZeroDivisionError"
+        return z
+
+def _find_root_linear(x1,x2,f1,f2):
+    """Find root x1,x2 by using interpolation.
+       
+       @param x1: left border of range
+       @type x1: float
+       @param x2: right border of range
+       @type x2: float
+       @param f1: value for x1
+       @type f1: float
+       @param f2: value for x2
+       @type f2: float
+       @return: M{x} where M{f(x)=0}
+       @rtype: float
+    """
+    m = f1 / (f2 - f1)
+    return x1 - m * (x2 - x1)
+
+def _find_intersection(x1,x2,fa1,fa2,fb1,fb2):
+    """Find intersection of two linear functions fa/fb between x1,x2
+       with values there fa1/fb1 and fa2/fb2.
+           
+       @param x1: left border of range
+       @type x1: float
+       @param x2: right border of range
+       @type x2: float
+       @param fa1: value for x1
+       @type fa1: float
+       @param fa2: value for x2
+       @type fa2: float
+       @param fb1: value for x1
+       @type fb1: float
+       @param fb2: value for x2
+       @type fb2: float
+       @return: M{x} where M{fa(x)-fb(x)=0}
+       @rtype: float
+    """
+    return _find_root_linear(x1,x2,fa1-fb1,fa2-fb2)
+
+def check(x,y1,y2):
+    if isinstance(y1,list) and len(y1)==1:
+        y1 = y1[0]
+    if isinstance(y1,float) and isinstance(y2,float):
+        return [(x,y1,y2)]
+    elif isinstance(y1,float) and isinstance(y2,list):
+        return [(x,y1,y2_) for y2_ in y2]
+    elif isinstance(y1,list) and isinstance(y2,float):
+        return [(x,y2_,y1_) for x,y1_,y2_ in check(x,y2,y1)]
+    else:
+        if len(y1) == len(y2):
+            # intersection
+            # for all x,y1,y2
+            return [(x,y1_,y2_) for y1_,y2_ in zip(y1,y2)]
+        elif len(y1) < len(y2):
+            if len(y2)>3:
+                raise FuzzyException()
+            # only case 2-3 is left
+            return [(x,y1[0],y2[0]),(x,y1[1],y2[1]),(x,y1[1],y2[2])]
+        else:
+            return [(x,y2,y1) for x,y1,y2 in check(x,y2_,y1_)]
+
+
+def _merge_generator1(set1, set2):
+    """Returns a new fuzzy set which is the merger of set1 and set2,
+    where the membership of the result set is equal to C{NORM(set1(x),set2(x))}.
+    
+    @param set1: fuzzy set
+    @type set1: L{fuzzy.set.Set}
+    @param set2: fuzzy set
+    @type set2: L{fuzzy.set.Set}
+    @return: resulting fuzzy set
+    @rtype: L{fuzzy.set.Polygon.Polygon}
+       """
+
+    g1 = set1.getValuesXY()
+    g2 = set2.getValuesXY()
+
+    def next_(g,x,y):
         try:
-            x_2,x_1,x_0 = x_1,x_0,y2 - (y2-y1)*(y2-y1)/(y2-2*y1+y0)
-            if x_2 is not None:
-                # Konvergenzquotient
-                q_1,q_0 = q_0,(x_0-x_1)/(x_1-x_2)
-                if epsilon is not None:
-                    # Fehlerschaetzung
-                    if epsilon > abs((x_0-x_1)*(x_0-x_1)/(x_0-2*x_1+x_2)):
-                        break
-        except ZeroDivisionError:
-            break
-    return x_0
+            x,y = next(g)
+            return x,y,False
+        except StopIteration:
+            return x,y,True
+
+    UPDATE_1 = 1
+    UPDATE_2 = 2
+    UPDATE_BOTH = 3
+
+    x1,y1,end1 = next_(g1,None,None)
+    x2,y2,end2 = next_(g2,None,None)
+    while not (end1 and end2):
+        if end1:
+            update = UPDATE_2
+        elif end2:
+            update = UPDATE_1
+        elif x1 < x2:
+            update = UPDATE_1
+        elif x1 > x2:
+            update = UPDATE_2
+        else:
+            update = UPDATE_BOTH
+
+        if update == UPDATE_1:
+            x = x1
+            y1_ = y1
+            y2_ = set2(x)
+        elif update == UPDATE_2:
+            x = x2
+            y1_ = set1(x)
+            y2_ = y2
+        else:
+            x = x1 # x1 == x2 !
+            y1_ = y1
+            y2_ = y2
+
+        #check
+        for _,_y1,_y2 in check(x,y1_,y2_):
+            # add this point
+            yield (x, _y1, _y2)
+
+        if update == UPDATE_1:
+            x1,y1,end1 = next_(g1,x1,y1)
+        elif update == UPDATE_2:
+            x2,y2,end2 = next_(g2,x2,y2)
+        else:
+            x1,y1,end1 = next_(g1,x1,y1)
+            x2,y2,end2 = next_(g2,x2,y2)
 
 
 def _merge_generator(NORM, set1, set2):
-    """Returns a new fuzzy set which ist the merger of set1 and set2,
+    """Returns a new fuzzy set which is the merger of set1 and set2,
     where the membership of the result set is equal to C{NORM(set1(x),set2(x))}.
     
     @param NORM: fuzzy norm to calculate both sets values. For example Min(), Max(), ...
@@ -111,73 +258,43 @@ def _merge_generator(NORM, set1, set2):
     @return: resulting fuzzy set
     @rtype: L{fuzzy.set.Polygon.Polygon}
        """
-    from fuzzy.set.Polygon import Polygon
-    g1 = set1.getIntervalGenerator()
-    g2 = set2.getIntervalGenerator()
 
-    x = g1.nextInterval(None,None)
-    x_ = g2.nextInterval(None,x)
-    if x_ is not None and x_ < x:
-        x = x_
-    if x is None:
-        return
-    y1 = set1(x)
-    y2 = set2(x)
-    yield (x,NORM(y1,y2))
-    while 1:
-        prev_x, prev_y1, prev_y2 = x, y1, y2
-        # get new interval from sets
-        x = g1.nextInterval(prev_x,None)
-        x_ = g2.nextInterval(prev_x,x)
-        if x is None and x_ is None: # no need for more intervals
-            break
-        if x is None: 
-            # first set is finished => take values from second 
-            x = x_
-        else:
-            if x_ is None:
-                # second set is finished first, x is already ok
-                pass
-            else:
-                if x_ < x:
-                    # both need more calculations, get smaller value
-                    x = x_
-        y1 = set1(x)
-        y2 = set2(x)
+    from fuzzy.set.Polygon import Polygon
+    use_find_root = not (isinstance(set1, Polygon) and isinstance(set2, Polygon))
+
+    g = _merge_generator1(set1,set2)
+    x,y1,y2 = next(g)
+    yield (x, NORM(y1, y2))
+    prev_x, prev_y1, prev_y2 = x, y1, y2
+    for x,y1,y2 in g:
         # test if intersection => split interval
         if (x != prev_x) and ((y1>y2 and prev_y1<prev_y2) or (y1<y2 and prev_y1>prev_y2)):
-            saved_x, saved_y1, saved_y2 = x, y1, y2
             # calculate intersection
-            y_diff = y1-y2
-            prev_y_diff = prev_y2-prev_y1
-            p = prev_y_diff/(prev_y_diff + y_diff)
-            x = prev_x + p * (x-prev_x)
-            if not (isinstance(set1,Polygon)
-               and isinstance(set2,Polygon)):
-                # in this case we have only an approximation
-                x = _find_null_steffensen(x,lambda x,set1=set1,set2=set2:set1(x)-set2(x))
-            y1 = set1(x)
-            y2 = set2(x)
+            if use_find_root:
+                f = lambda x, set1=set1, set2=set2: set1(x)-set2(x)
+                x_ = _find_root(f, prev_x, x, prev_y1-prev_y2, y1-y2)
+            else:
+                x_ = _find_intersection(prev_x,x,prev_y1,y1,prev_y2,y2)
+            y1_ = set1(x_)
+            y2_ = set2(x_)
             # add this point
-            yield (x,NORM(y1,y2))
-            # restore saved point
-            prev_x, prev_y1, prev_y2 = x, y1, y2
-            x,y1,y2 = saved_x,saved_y1,saved_y2
+            yield (x_, NORM(y1_, y2_))
+            # set saved point to intermediate
+            prev_x, prev_y1, prev_y2 = x_, y1_, y2_
         # add this point
-        yield (x,NORM(y1,y2))
-    return
-
+        yield (x, NORM(y1, y2))
+        prev_x, prev_y1, prev_y2 = x, y1, y2
 
 def merge(NORM, set1, set2, segment_size=None):
-    """Returns a new fuzzy set which ist the merger of set1 and set2,
+    """Returns a new fuzzy set which is the merger of set1 and set2,
     where the membership of the result set is equal to C{NORM(set1(x),set2(x))}.
     
     For nonlinear operations you might want set the segment size to a value 
     which controls how large a linear segment of the result can be. 
     See also the following examples:
-      - U{http://pyfuzzy.sourceforge.net/test/merge/AlgebraicProduct_d_d.png} - The algebraic product is M{x*y}, so using it on the same set, it calculates the square of it.
-      - U{http://pyfuzzy.sourceforge.net/test/merge/AlgebraicSum_d_d.png} - The algebraic sum is M{x+y-x*y}.
-       
+      - U{http://pyfuzzy.sourceforge.net/demo/merge/AlgebraicProduct_d_d.png} - The algebraic product is M{x*y}, so using it on the same set, it calculates the square of it.
+      - U{http://pyfuzzy.sourceforge.net/demo/merge/AlgebraicSum_d_d.png} - The algebraic sum is M{x+y-x*y}.
+    
     @param NORM: fuzzy norm to calculate both sets values. For example Min(), Max(), ...
         Also possible as two params function, eg. C{lambda a,b: (a+b)/2.}.
     @type NORM: L{fuzzy.norm.Norm.Norm}
@@ -193,24 +310,24 @@ def merge(NORM, set1, set2, segment_size=None):
     from fuzzy.set.Polygon import Polygon
     ret = Polygon()
 
-    prev_x,prev_y = None,None
-    for x,y in _merge_generator(NORM,set1,set2):
+    prev_x, prev_y = None, None
+    for x, y in _merge_generator(NORM, set1, set2):
         if (segment_size is not None) and (prev_x is not None) and (abs(y-prev_y)>0.01):
             diff = x-prev_x
             if  diff > 2.*segment_size:
                 n = int(diff/segment_size)
                 dx = diff/n
-                for i in range(1,n):
+                for i in range(1, n):
                     x_ = prev_x+i*dx
-                    ret.add(x_,NORM(set1(x_),set2(x_)))
-        ret.add(x,y)
-        prev_x,prev_y = x,y
+                    ret.add(x_, NORM(set1(x_), set2(x_)))
+        ret.add(x, y)
+        prev_x, prev_y = x, y
 
     return ret
 
 
 def _norm_generator(NORM, set, value):
-    """Returns a new fuzzy set which ist this set normed with value.
+    """Returns a new fuzzy set which is this set normed with value.
     where the membership of the result set is equal to C{NORM(set(x),value)}.
     
     @param NORM: fuzzy norm to calculate set's values with value. For example Min(), Max(), ...
@@ -220,46 +337,35 @@ def _norm_generator(NORM, set, value):
     @type set: L{fuzzy.set.Set}
     @param value: value
     @type value: float
-    @return: resulting fuzzy set
-    @rtype: L{fuzzy.set.Polygon.Polygon}
     """
+
     from fuzzy.set.Polygon import Polygon
-    g = set.getIntervalGenerator()
+    use_find_root = not isinstance(set, Polygon)
 
-    x = g.nextInterval(None,None)
-    if x is None:
-        return
-    y = set(x)
-    yield (x,NORM(y,value))
-    while 1:
-        prev_x, prev_y = x, y
-        # get new interval from sets
-        x = g.nextInterval(prev_x,None)
-        if x is None: # no need for more intervals
-            break
-        y = set(x)
-        # test if intersection => split interval
-        if (x != prev_x) and ((y>value and prev_y<value) or (y<value and prev_y>value)):
-            saved_x, saved_y = x, y
-            # calculate intersection
-            y_diff = y-value
-            prev_y_diff = value-prev_y
-            p = prev_y_diff/(prev_y_diff + y_diff)
-            x = prev_x + p * (x-prev_x)
-            if not isinstance(set,Polygon):
-                # in this case we have only an approximation
-                x = _find_null_steffensen(x,lambda x,set=set,value=value:set(x)-value)
-            y = set(x)
-            # add this point
-            yield (x,NORM(y,value))
-            # restore saved point
-            prev_x, prev_y = x, y
-            x,y = saved_x,saved_y
+    prev_x = None
+    prev_y = None
+    for x,y in set.getValuesXY(flat=True):
+        if prev_x is None:
+            pass
+        else:
+            # test if intersection => split interval
+            if (x != prev_x) and ((y>value and prev_y<value) or (y<value and prev_y>value)):
+                # calculate intersection
+                if use_find_root:
+                    f = lambda x, set=set: set(x)-value
+                    x_ = _find_root(f, prev_x, x, prev_y-value, y-value)
+                else:
+                    x_ = _find_intersection(prev_x,x,prev_y,y,value,value)
+                y_ = set(x_)
+                # add this point
+                yield (x_, NORM(y_, value))
+                # set saved point to intermediate
+                prev_x, prev_y = x_, y_
         # add this point
-        yield (x,NORM(y,value))
-    return
+        prev_x,prev_y = x,y
+        yield (x, NORM(y, value))
 
-def norm(NORM, set, value,segment_size=None):
+def norm(NORM, set, value, segment_size=None):
     """Returns a new fuzzy set which ist this set normed with value.
     where the membership of the result set is equal to C{NORM(set(x),value)}.
 
@@ -280,23 +386,23 @@ def norm(NORM, set, value,segment_size=None):
     from fuzzy.set.Polygon import Polygon
     ret = Polygon()
 
-    prev_x,prev_y = None,None
-    for x,y in _norm_generator(NORM,set,value):
+    prev_x, prev_y = None, None
+    for x, y in _norm_generator(NORM, set, value):
         if (segment_size is not None) and (prev_x is not None) and (abs(y-prev_y)>0.01):
             diff = x-prev_x
             if  diff > 2.*segment_size:
                 n = int(diff/segment_size)
                 dx = diff/n
-                for i in range(1,n):
+                for i in range(1, n):
                     x_ = prev_x+i*dx
-                    ret.add(x_,NORM(set(x_),value))
-        ret.add(x,y)
-        prev_x,prev_y = x,y
+                    ret.add(x_, NORM(set(x_), value))
+        ret.add(x, y)
+        prev_x, prev_y = x, y
 
     return ret
 
 def _complement_generator(COMPLEMENT, set):
-    """Returns a new fuzzy set which ist this complement of the given set.
+    """Returns a new fuzzy set which is this complement of the given set.
     (Where the membership of the result set is equal to C{COMPLEMENT(set(x))}.
     
     @param COMPLEMENT: fuzzy complement to use. For example Zadeh(), ...
@@ -307,27 +413,11 @@ def _complement_generator(COMPLEMENT, set):
     @return: resulting fuzzy set
     @rtype: L{fuzzy.set.Polygon.Polygon}
     """
-    g = set.getIntervalGenerator()
+    for x,y in set.getValuesXY(flat=True):
+        yield (x, COMPLEMENT(y))
 
-    x = g.nextInterval(None,None)
-    if x is None:
-        return
-    y = set(x)
-    yield (x,COMPLEMENT(y))
-    while 1:
-        prev_x, prev_y = x, y
-        # get new interval from sets
-        x = g.nextInterval(prev_x,None)
-        if x is None: # no need for more intervals
-            break
-        y = set(x)
-        # add this point
-        yield (x,COMPLEMENT(y))
-    return
-
-
-def complement(COMPLEMENT, set,segment_size=None):
-    """Returns a new fuzzy set which ist this complement of the given set.
+def complement(COMPLEMENT, set, segment_size=None):
+    """Returns a new fuzzy set which is this complement of the given set.
     (Where the membership of the result set is equal to C{COMPLEMENT(set(x))}.
 
     For meaning of segment_size see also L{fuzzy.set.operations.merge}.
@@ -345,17 +435,17 @@ def complement(COMPLEMENT, set,segment_size=None):
     from fuzzy.set.Polygon import Polygon
     ret = Polygon()
 
-    prev_x,prev_y = None,None
-    for x,y in _complement_generator(COMPLEMENT,set):
+    prev_x, prev_y = None, None
+    for x, y in _complement_generator(COMPLEMENT, set):
         if (segment_size is not None) and (prev_x is not None) and (abs(y-prev_y)>0.01):
             diff = x-prev_x
             if  diff > 2.*segment_size:
                 n = int(diff/segment_size)
                 dx = diff/n
-                for i in range(1,n):
+                for i in range(1, n):
                     x_ = prev_x+i*dx
-                    ret.add(x_,COMPLEMENT(set(x_)))
-        ret.add(x,y)
-        prev_x,prev_y = x,y
+                    ret.add(x_, COMPLEMENT(set(x_)))
+        ret.add(x, y)
+        prev_x, prev_y = x, y
 
     return ret

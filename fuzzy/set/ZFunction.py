@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,13 +9,16 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: ZFunction.py,v 1.13 2009/08/07 07:19:19 rliebscher Exp $"
+"""Realize a Z-shaped fuzzy set."""
+
+__revision__ = "$Id: ZFunction.py,v 1.17 2010-03-28 18:44:46 rliebscher Exp $"
 
 
 from fuzzy.set.SFunction import SFunction
@@ -30,9 +33,9 @@ class ZFunction(SFunction):
              | | \__
              | a |
              |   |
-             delta
+            2*delta
 
-    see also U{http://pyfuzzy.sourceforge.net/test/set/ZFunction.png}
+    see also U{http://pyfuzzy.sourceforge.net/demo/set/ZFunction.png}
     
     @ivar a: center of set.
     @type a: float
@@ -40,7 +43,7 @@ class ZFunction(SFunction):
     @type delta: float
     """
 
-    def __init__(self,a=0.0,delta=1.0):
+    def __init__(self, a=0.0, delta=1.0):
         """Initialize a Z-shaped fuzzy set.
 
         @param a: center of set
@@ -48,10 +51,10 @@ class ZFunction(SFunction):
         @param delta: absolute distance between x-values for minimum and maximum
         @type delta: float
         """
-        super(ZFunction, self).__init__(a,delta)
+        super(ZFunction, self).__init__(a, delta)
 
 
-    def __call__(self,x):
+    def __call__(self, x):
         """Return membership of x in this fuzzy set.
            This method makes the set work like a function.
            
@@ -60,5 +63,4 @@ class ZFunction(SFunction):
            @return: membership
            @rtype: float
            """
-        return 1.0 - SFunction.__call__(self,x)
-
+        return 1.0 - SFunction.__call__(self, x)
