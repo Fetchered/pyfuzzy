@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,37 +9,40 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: COGS.py,v 1.4 2009/08/07 07:19:18 rliebscher Exp $"
+"""Defuzzification for singletons."""
 
-from fuzzy.defuzzify.Base import Base,DefuzzificationException
+__revision__ = "$Id: COGS.py,v 1.8 2010-03-28 18:40:33 rliebscher Exp $"
+
+from fuzzy.defuzzify.Base import Base, DefuzzificationException
 import fuzzy.set.Singleton
 
 class COGS(Base):
-    """defuzzification for singletons."""
+    """Defuzzification for singletons."""
 
-    def __init__(self, INF=None, ACC=None, failsafe=None,*args,**keywords):
+    def __init__(self, INF=None, ACC=None, failsafe=None, *args, **keywords):
         """
             @param failsafe: if is not possible to calculate a center of gravity,
             return this value if not None or forward the exception
         """
-        super(COGS, self).__init__(INF,ACC,*args,**keywords)
+        super(COGS, self).__init__(INF, ACC, *args, **keywords)
         self.failsafe = failsafe # which value if COG not calculable
 
-    def getValue(self,variable):
-        """Defuzzyfication using center of gravity method."""
-        sum_1,sum_2 = 0.,0.
+    def getValue(self, variable):
+        """Defuzzification using center of gravity method."""
+        sum_1, sum_2 = 0.,0.
         for adjective in variable.adjectives.values():
             # get precomputed adjective set
             set = adjective.set
-            if not isinstance(set,fuzzy.set.Singleton.Singleton):
+            if not isinstance(set, fuzzy.set.Singleton.Singleton):
                 raise DefuzzificationException("Only Singleton for COGS defuzzification allowed.")
-            a = (self.INF or self._INF)(set(set.x),adjective.getMembership())
+            a = (self.INF or self._INF)(set(set.x), adjective.getMembership())
             sum_1 += set.x*a
             sum_2 += a
         try:
@@ -54,3 +57,12 @@ class COGS(Base):
             else:
                 # forward exception
                 raise
+
+    def _repr_params(self, params):
+        """Helper for representation of instance.
+        
+        Add all own params to given list in params.    
+        """
+        super(COGS, self)._repr_params(params)
+        if self.failsafe: params.append("failsafe=%s" % self.failsafe) 
+

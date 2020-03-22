@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,27 +9,30 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: MaxLeft.py,v 1.4 2009/08/07 07:19:18 rliebscher Exp $"
+"""Defuzzification which uses the left global maximum."""
 
-from fuzzy.defuzzify.Base import Base,DefuzzificationException
+__revision__ = "$Id: MaxLeft.py,v 1.8 2010-03-28 18:40:33 rliebscher Exp $"
+
+from fuzzy.defuzzify.Base import Base, DefuzzificationException
 
 class MaxLeft(Base):
-    """Defuzzyfication which uses the left global maximum."""
+    """Defuzzification which uses the left global maximum."""
 
-    def __init__(self, INF=None, ACC=None, failsafe=None,*args,**keywords):
+    def __init__(self, INF=None, ACC=None, failsafe=None, *args, **keywords):
         """Initialize the defuzzification method with INF,ACC 
         and an optional value in case defuzzification is not possible"""
-        super(MaxLeft, self).__init__(INF,ACC,*args,**keywords)
+        super(MaxLeft, self).__init__(INF, ACC, *args, **keywords)
         self.failsafe = failsafe # which value if value not calculable
 
-    def getValue(self,variable):
-        """Defuzzyfication."""
+    def getValue(self, variable):
+        """Defuzzification."""
         try:
             temp = self.accumulate(variable)
 
@@ -42,7 +45,7 @@ class MaxLeft(Base):
             y = table[0][1]
             x = float('-inf') # left end of polygon is always -infinity
 
-            for (x_,y_) in table[1:]:
+            for (x_, y_) in table[1:]:
                 if y_ > y:
                     y = y_
                     x = x_
@@ -55,3 +58,11 @@ class MaxLeft(Base):
                 return self.failsafe
             else:
                 raise
+
+    def _repr_params(self, params):
+        """Helper for representation of instance.
+        
+        Add all own params to given list in params.    
+        """
+        super(MaxLeft, self)._repr_params(params)
+        if self.failsafe: params.append("failsafe=%s" % self.failsafe) 

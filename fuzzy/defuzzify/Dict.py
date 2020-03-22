@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,18 +9,22 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: Dict.py,v 1.6 2009/08/31 21:02:06 rliebscher Exp $"
+"""Not a real defuzzification.
+Just stores the adjective memberships in a dictionary for output."""
+
+__revision__ = "$Id: Dict.py,v 1.9 2010-03-28 18:40:33 rliebscher Exp $"
 
 from fuzzy.defuzzify.Base import Base
 
 class Dict(Base):
-    """Not a real defuzzyfication.
+    """Not a real defuzzification.
        Just stores the adjective memberships
        in a dictionary for output.
        You should use in the adjectives instances of Set itself.
@@ -55,13 +59,13 @@ class Dict(Base):
                }
         }
        """
-    def __init__(self,*args,**keywords):
-        super(Dict,self).__init__(*args,**keywords)
+    def __init__(self, *args, **keywords):
+        super(Dict, self).__init__(*args, **keywords)
 
-    def getValue(self,variable):
+    def getValue(self, variable):
         """no defuzzification just return membership values"""
         temp = {}
-        for name,adjective in variable.adjectives.items():
+        for name, adjective in variable.adjectives.items():
             # get precomputed adjective set membership
             temp[name] = adjective.getMembership()
         return temp
