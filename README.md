@@ -1,7 +1,6 @@
-                             Python Fuzzy
-                             release 0.1.1
-                           October 18th, 2009
-
+Python Fuzzy\
+Release 0.1.1\
+October 18th, 2009
 
 INTRODUCTION
 ------------
@@ -19,7 +18,7 @@ For generation documentation from the source distribution, you need the
 Python internal pydoc or better epydoc (http://epydoc.sourceforge.net).
 
 For reading FCL files you need the ANTLR3 python runtime.
-(https://www.antlr3.org/download.html) or just
+(https://www.antlr3.org/download.html) or just\
 pip install antlr3-python-runtime
 
 For generating plots of your variables or functional dependencies
@@ -78,7 +77,6 @@ inverted pendulum:
     trained with data from a fuzzy controller (used in the Delphi fuzzy
     system which was the base of this python fuzzy project)
 
-...
 
 BUGS AND LIMITATIONS
 --------------------
@@ -120,6 +118,3 @@ Others:
         - added min/max/unit properties to variables
         - GUI fuzzui (not included here, not finished)
         - example "analyse" (not included here, see webpage)
-
-
-$Id: README.txt,v 1.7 2010-03-28 18:50:22 rliebscher Exp $
