@@ -1,12 +1,13 @@
-# $ANTLR 3.1.2 FCL.g 2009-09-27 20:18:17
+# $ANTLR 3.1.2 /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g 2012-10-19 23:25:10
 
 import sys
 from antlr3 import *
 from antlr3.compat import set, frozenset
          
 #docstring
-"""Parser for reading FCL by the pyfuzzy package."""
-__revision__ = "$Id: FCLParser.py,v 1.5 2009/09/27 18:20:00 rliebscher Exp $"
+__doc__ = """Parser for reading FCL by the pyfuzzy package."""
+__revision__ = "$Id: FCLParser.py,v 1.9 2013-01-09 20:10:19 rliebscher Exp $"
+
 import fuzzy.System
 import fuzzy.InputVariable
 import fuzzy.OutputVariable
@@ -25,22 +26,30 @@ import fuzzy.Rule
 import fuzzy.norm.Min
 import fuzzy.norm.Max
 
-def getNorm(name,p=None):
+def getNorm(name, p=None):
     """Get an instance of a fuzzy norm with given name.
     Normally looks into the fuzzy.norm package for a suitable class.
     """
-    m = __import__("fuzzy.norm."+name,fromlist=[name])
+    m = __import__("fuzzy.norm."+name, fromlist=[name])
     c = m.__dict__[name]
     if p is None:
         return c()
     else:
         return c(p)
 
+def getSet(name, params=[]):
+    """Get an instance of a fuzzy set with given name.
+    Normally looks into the fuzzy.set package for a suitable class.
+    """
+    m = __import__("fuzzy.set."+name, fromlist=[name])
+    c = m.__dict__[name]
+    return c(*params)
+
 def getDefuzzificationMethod(name):
     """Get an instance of a defuzzification method with given name.
     Normally looks into the fuzzy.defuzzify package for a suitable class.
     """
-    m = __import__("fuzzy.defuzzify."+name,fromlist=[name])
+    m = __import__("fuzzy.defuzzify."+name, fromlist=[name])
     c = m.__dict__[name]
     return c()
 
@@ -50,7 +59,7 @@ _operators = {
     "OR":fuzzy.norm.Max.Max()
     }
 
-def defineOperator(name,norm):
+def defineOperator(name, norm):
     """Defines a operator (AND,OR,...) to use a given norm."""
     _operators[name] = norm
     #print "defineOperator ",name,norm
@@ -67,13 +76,30 @@ def defineStructType(name):
     """Remember name of a struct definition"""
     _structs[name] = []
 
-def defineStructTypeElement(name,elem):
+def defineStructTypeElement(name, elem):
     """Add a struct element"""
     _structs[name].append(elem)
 
 def getStructType(name):
     """Get list of elements of a struct definition"""
     return _structs[name]
+
+# pylint: disable-msg=W0107,W0301,W0401,W0614,W0621,C0103,C0111,C0301,C0302,C0322,C0324,R0904,R0912,R0915
+#ID:W0107 : Unnecessary pass statement
+#ID:W0301 : Unnecessary semicolon
+#ID:W0401 : Wildcard import antlr3
+#ID:W0614 : Unused import ... from wildcard import
+#ID:W0621 : Redefining name 'main' from outer scope
+#ID:C0103 : Invalid name
+#ID:C0111 : Missing docstring
+#ID:C0301 : Line too long
+#ID:C0302 : Too many lines in module
+#ID:C0322 : Operator not preceded by a space
+#ID:C0324 : Comma not followed by a space
+#ID:R0912 : Too many branches
+#ID:R0915 : Too many statements
+#ID:R0904 : Too many public methods
+
 
 
 
@@ -157,7 +183,7 @@ tokenNames = [
 
 
 class FCLParser(Parser):
-    grammarFileName = "FCL.g"
+    grammarFileName = "/work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g"
     antlr_version = version_str_to_tuple("3.1.2")
     antlr_version_str = "3.1.2"
     tokenNames = tokenNames
@@ -188,15 +214,15 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "main"
-    # FCL.g:111:1: main returns [system] : function_block_declaration ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:154:1: main returns [system] : function_block_declaration ;
     def main(self, ):
 
         system = None
 
         try:
             try:
-                # FCL.g:111:23: ( function_block_declaration )
-                # FCL.g:111:25: function_block_declaration
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:154:23: ( function_block_declaration )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:154:25: function_block_declaration
                 pass 
                 #action start
                 self.System = None;
@@ -212,7 +238,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -225,7 +252,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "function_block_declaration"
-    # FCL.g:113:1: function_block_declaration : 'FUNCTION_BLOCK' function_block_name ( type_definition )* ( fb_io_var_declarations )* function_block_body 'END_FUNCTION_BLOCK' EOF ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:156:1: function_block_declaration : 'FUNCTION_BLOCK' function_block_name ( type_definition )* ( fb_io_var_declarations )* function_block_body 'END_FUNCTION_BLOCK' EOF ;
     def function_block_declaration(self, ):
 
         function_block_name1 = None
@@ -233,8 +260,8 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:114:3: ( 'FUNCTION_BLOCK' function_block_name ( type_definition )* ( fb_io_var_declarations )* function_block_body 'END_FUNCTION_BLOCK' EOF )
-                # FCL.g:115:5: 'FUNCTION_BLOCK' function_block_name ( type_definition )* ( fb_io_var_declarations )* function_block_body 'END_FUNCTION_BLOCK' EOF
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:157:3: ( 'FUNCTION_BLOCK' function_block_name ( type_definition )* ( fb_io_var_declarations )* function_block_body 'END_FUNCTION_BLOCK' EOF )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:158:5: 'FUNCTION_BLOCK' function_block_name ( type_definition )* ( fb_io_var_declarations )* function_block_body 'END_FUNCTION_BLOCK' EOF
                 pass 
                 self.match(self.input, 14, self.FOLLOW_14_in_function_block_declaration71)
                 self._state.following.append(self.FOLLOW_function_block_name_in_function_block_declaration77)
@@ -244,7 +271,7 @@ class FCLParser(Parser):
                 #action start
                 self.System = fuzzy.System.System(description=((function_block_name1 is not None) and [self.input.toString(function_block_name1.start,function_block_name1.stop)] or [None])[0]); 
                 #action end
-                # FCL.g:117:5: ( type_definition )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:160:5: ( type_definition )*
                 while True: #loop1
                     alt1 = 2
                     LA1_0 = self.input.LA(1)
@@ -254,7 +281,7 @@ class FCLParser(Parser):
 
 
                     if alt1 == 1:
-                        # FCL.g:117:5: type_definition
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:160:5: type_definition
                         pass 
                         self._state.following.append(self.FOLLOW_type_definition_in_function_block_declaration85)
                         self.type_definition()
@@ -266,7 +293,7 @@ class FCLParser(Parser):
                         break #loop1
 
 
-                # FCL.g:118:5: ( fb_io_var_declarations )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:161:5: ( fb_io_var_declarations )*
                 while True: #loop2
                     alt2 = 2
                     LA2_0 = self.input.LA(1)
@@ -276,7 +303,7 @@ class FCLParser(Parser):
 
 
                     if alt2 == 1:
-                        # FCL.g:118:5: fb_io_var_declarations
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:161:5: fb_io_var_declarations
                         pass 
                         self._state.following.append(self.FOLLOW_fb_io_var_declarations_in_function_block_declaration92)
                         self.fb_io_var_declarations()
@@ -298,7 +325,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -311,22 +339,22 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "type_definition"
-    # FCL.g:125:1: type_definition : 'STRUCT' Identifier ( struct_element[$Identifier.text] )+ 'END_STRUCT' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:168:1: type_definition : 'STRUCT' Identifier ( struct_element[$Identifier.text] )+ 'END_STRUCT' ;
     def type_definition(self, ):
 
         Identifier2 = None
 
         try:
             try:
-                # FCL.g:126:3: ( 'STRUCT' Identifier ( struct_element[$Identifier.text] )+ 'END_STRUCT' )
-                # FCL.g:126:6: 'STRUCT' Identifier ( struct_element[$Identifier.text] )+ 'END_STRUCT'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:169:3: ( 'STRUCT' Identifier ( struct_element[$Identifier.text] )+ 'END_STRUCT' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:169:6: 'STRUCT' Identifier ( struct_element[$Identifier.text] )+ 'END_STRUCT'
                 pass 
                 self.match(self.input, 16, self.FOLLOW_16_in_type_definition126)
                 Identifier2=self.match(self.input, Identifier, self.FOLLOW_Identifier_in_type_definition128)
                 #action start
                 defineStructType(Identifier2.text); 
                 #action end
-                # FCL.g:126:66: ( struct_element[$Identifier.text] )+
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:169:66: ( struct_element[$Identifier.text] )+
                 cnt3 = 0
                 while True: #loop3
                     alt3 = 2
@@ -337,7 +365,7 @@ class FCLParser(Parser):
 
 
                     if alt3 == 1:
-                        # FCL.g:126:66: struct_element[$Identifier.text]
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:169:66: struct_element[$Identifier.text]
                         pass 
                         self._state.following.append(self.FOLLOW_struct_element_in_type_definition132)
                         self.struct_element(Identifier2.text)
@@ -360,7 +388,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -373,28 +402,29 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "struct_element"
-    # FCL.g:129:1: struct_element[struct_name] : Identifier ':' 'REAL' ';' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:172:1: struct_element[struct_name] : Identifier ':' 'REAL' ';' ;
     def struct_element(self, struct_name):
 
         Identifier3 = None
 
         try:
             try:
-                # FCL.g:130:3: ( Identifier ':' 'REAL' ';' )
-                # FCL.g:130:6: Identifier ':' 'REAL' ';'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:173:3: ( Identifier ':' 'REAL' ';' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:173:6: Identifier ':' 'REAL' ';'
                 pass 
                 Identifier3=self.match(self.input, Identifier, self.FOLLOW_Identifier_in_struct_element151)
                 self.match(self.input, 18, self.FOLLOW_18_in_struct_element153)
                 self.match(self.input, 19, self.FOLLOW_19_in_struct_element155)
                 self.match(self.input, 20, self.FOLLOW_20_in_struct_element157)
                 #action start
-                defineStructTypeElement(struct_name,Identifier3.text);
+                defineStructTypeElement(struct_name, Identifier3.text);
                 #action end
 
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -407,12 +437,12 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "fb_io_var_declarations"
-    # FCL.g:133:1: fb_io_var_declarations : ( input_declarations | output_declarations );
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:176:1: fb_io_var_declarations : ( input_declarations | output_declarations );
     def fb_io_var_declarations(self, ):
 
         try:
             try:
-                # FCL.g:134:3: ( input_declarations | output_declarations )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:177:3: ( input_declarations | output_declarations )
                 alt4 = 2
                 LA4_0 = self.input.LA(1)
 
@@ -426,7 +456,7 @@ class FCLParser(Parser):
                     raise nvae
 
                 if alt4 == 1:
-                    # FCL.g:134:5: input_declarations
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:177:5: input_declarations
                     pass 
                     self._state.following.append(self.FOLLOW_input_declarations_in_fb_io_var_declarations172)
                     self.input_declarations()
@@ -435,7 +465,7 @@ class FCLParser(Parser):
 
 
                 elif alt4 == 2:
-                    # FCL.g:135:5: output_declarations
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:178:5: output_declarations
                     pass 
                     self._state.following.append(self.FOLLOW_output_declarations_in_fb_io_var_declarations178)
                     self.output_declarations()
@@ -444,7 +474,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -457,16 +488,16 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "input_declarations"
-    # FCL.g:138:1: input_declarations : 'VAR_INPUT' ( var_decl[0] )+ 'END_VAR' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:181:1: input_declarations : 'VAR_INPUT' ( var_decl[0] )+ 'END_VAR' ;
     def input_declarations(self, ):
 
         try:
             try:
-                # FCL.g:138:20: ( 'VAR_INPUT' ( var_decl[0] )+ 'END_VAR' )
-                # FCL.g:138:22: 'VAR_INPUT' ( var_decl[0] )+ 'END_VAR'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:181:20: ( 'VAR_INPUT' ( var_decl[0] )+ 'END_VAR' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:181:22: 'VAR_INPUT' ( var_decl[0] )+ 'END_VAR'
                 pass 
                 self.match(self.input, 21, self.FOLLOW_21_in_input_declarations189)
-                # FCL.g:138:34: ( var_decl[0] )+
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:181:34: ( var_decl[0] )+
                 cnt5 = 0
                 while True: #loop5
                     alt5 = 2
@@ -477,7 +508,7 @@ class FCLParser(Parser):
 
 
                     if alt5 == 1:
-                        # FCL.g:138:34: var_decl[0]
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:181:34: var_decl[0]
                         pass 
                         self._state.following.append(self.FOLLOW_var_decl_in_input_declarations191)
                         self.var_decl(0)
@@ -500,7 +531,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -513,16 +545,16 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "output_declarations"
-    # FCL.g:139:1: output_declarations : 'VAR_OUTPUT' ( var_decl[1] )+ 'END_VAR' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:182:1: output_declarations : 'VAR_OUTPUT' ( var_decl[1] )+ 'END_VAR' ;
     def output_declarations(self, ):
 
         try:
             try:
-                # FCL.g:139:21: ( 'VAR_OUTPUT' ( var_decl[1] )+ 'END_VAR' )
-                # FCL.g:139:23: 'VAR_OUTPUT' ( var_decl[1] )+ 'END_VAR'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:182:21: ( 'VAR_OUTPUT' ( var_decl[1] )+ 'END_VAR' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:182:23: 'VAR_OUTPUT' ( var_decl[1] )+ 'END_VAR'
                 pass 
                 self.match(self.input, 23, self.FOLLOW_23_in_output_declarations203)
-                # FCL.g:139:36: ( var_decl[1] )+
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:182:36: ( var_decl[1] )+
                 cnt6 = 0
                 while True: #loop6
                     alt6 = 2
@@ -533,7 +565,7 @@ class FCLParser(Parser):
 
 
                     if alt6 == 1:
-                        # FCL.g:139:36: var_decl[1]
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:182:36: var_decl[1]
                         pass 
                         self._state.following.append(self.FOLLOW_var_decl_in_output_declarations205)
                         self.var_decl(1)
@@ -556,7 +588,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -569,7 +602,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "var_decl"
-    # FCL.g:142:1: var_decl[output_var] : Identifier ':' type ';' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:185:1: var_decl[output_var] : Identifier ':' type ';' ;
     def var_decl(self, output_var):
 
         Identifier5 = None
@@ -578,8 +611,8 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:143:3: ( Identifier ':' type ';' )
-                # FCL.g:144:3: Identifier ':' type ';'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:186:3: ( Identifier ':' type ';' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:187:3: Identifier ':' type ';'
                 pass 
                 Identifier5=self.match(self.input, Identifier, self.FOLLOW_Identifier_in_var_decl223)
                 self.match(self.input, 18, self.FOLLOW_18_in_var_decl227)
@@ -616,7 +649,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -629,7 +663,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "type"
-    # FCL.g:172:1: type returns [struct_type] : ( 'REAL' | Identifier );
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:215:1: type returns [struct_type] : ( 'REAL' | Identifier );
     def type(self, ):
 
         struct_type = None
@@ -638,7 +672,7 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:173:3: ( 'REAL' | Identifier )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:216:3: ( 'REAL' | Identifier )
                 alt7 = 2
                 LA7_0 = self.input.LA(1)
 
@@ -652,7 +686,7 @@ class FCLParser(Parser):
                     raise nvae
 
                 if alt7 == 1:
-                    # FCL.g:174:3: 'REAL'
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:217:3: 'REAL'
                     pass 
                     self.match(self.input, 19, self.FOLLOW_19_in_type254)
                     #action start
@@ -661,7 +695,7 @@ class FCLParser(Parser):
 
 
                 elif alt7 == 2:
-                    # FCL.g:176:3: Identifier
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:219:3: Identifier
                     pass 
                     Identifier6=self.match(self.input, Identifier, self.FOLLOW_Identifier_in_type264)
                     #action start
@@ -670,7 +704,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -683,15 +718,15 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "function_block_body"
-    # FCL.g:182:1: function_block_body : ( fuzzify_block )* ( defuzzify_block )* ( rule_block )* ( option_block )* ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:225:1: function_block_body : ( fuzzify_block )* ( defuzzify_block )* ( rule_block )* ( option_block )* ;
     def function_block_body(self, ):
 
         try:
             try:
-                # FCL.g:183:3: ( ( fuzzify_block )* ( defuzzify_block )* ( rule_block )* ( option_block )* )
-                # FCL.g:184:5: ( fuzzify_block )* ( defuzzify_block )* ( rule_block )* ( option_block )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:226:3: ( ( fuzzify_block )* ( defuzzify_block )* ( rule_block )* ( option_block )* )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:227:5: ( fuzzify_block )* ( defuzzify_block )* ( rule_block )* ( option_block )*
                 pass 
-                # FCL.g:184:5: ( fuzzify_block )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:227:5: ( fuzzify_block )*
                 while True: #loop8
                     alt8 = 2
                     LA8_0 = self.input.LA(1)
@@ -701,7 +736,7 @@ class FCLParser(Parser):
 
 
                     if alt8 == 1:
-                        # FCL.g:184:5: fuzzify_block
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:227:5: fuzzify_block
                         pass 
                         self._state.following.append(self.FOLLOW_fuzzify_block_in_function_block_body286)
                         self.fuzzify_block()
@@ -713,7 +748,7 @@ class FCLParser(Parser):
                         break #loop8
 
 
-                # FCL.g:185:5: ( defuzzify_block )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:228:5: ( defuzzify_block )*
                 while True: #loop9
                     alt9 = 2
                     LA9_0 = self.input.LA(1)
@@ -723,7 +758,7 @@ class FCLParser(Parser):
 
 
                     if alt9 == 1:
-                        # FCL.g:185:5: defuzzify_block
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:228:5: defuzzify_block
                         pass 
                         self._state.following.append(self.FOLLOW_defuzzify_block_in_function_block_body293)
                         self.defuzzify_block()
@@ -735,7 +770,7 @@ class FCLParser(Parser):
                         break #loop9
 
 
-                # FCL.g:186:5: ( rule_block )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:229:5: ( rule_block )*
                 while True: #loop10
                     alt10 = 2
                     LA10_0 = self.input.LA(1)
@@ -745,7 +780,7 @@ class FCLParser(Parser):
 
 
                     if alt10 == 1:
-                        # FCL.g:186:5: rule_block
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:229:5: rule_block
                         pass 
                         self._state.following.append(self.FOLLOW_rule_block_in_function_block_body300)
                         self.rule_block()
@@ -757,7 +792,7 @@ class FCLParser(Parser):
                         break #loop10
 
 
-                # FCL.g:187:5: ( option_block )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:230:5: ( option_block )*
                 while True: #loop11
                     alt11 = 2
                     LA11_0 = self.input.LA(1)
@@ -767,7 +802,7 @@ class FCLParser(Parser):
 
 
                     if alt11 == 1:
-                        # FCL.g:187:5: option_block
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:230:5: option_block
                         pass 
                         self._state.following.append(self.FOLLOW_option_block_in_function_block_body307)
                         self.option_block()
@@ -783,7 +818,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -796,7 +832,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "fuzzify_block"
-    # FCL.g:190:1: fuzzify_block : 'FUZZIFY' variable_name ( linguistic_term[$variable_name.text] )* 'END_FUZZIFY' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:233:1: fuzzify_block : 'FUZZIFY' variable_name ( linguistic_term[$variable_name.text] )* 'END_FUZZIFY' ;
     def fuzzify_block(self, ):
 
         variable_name7 = None
@@ -804,15 +840,15 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:191:3: ( 'FUZZIFY' variable_name ( linguistic_term[$variable_name.text] )* 'END_FUZZIFY' )
-                # FCL.g:192:5: 'FUZZIFY' variable_name ( linguistic_term[$variable_name.text] )* 'END_FUZZIFY'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:234:3: ( 'FUZZIFY' variable_name ( linguistic_term[$variable_name.text] )* 'END_FUZZIFY' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:235:5: 'FUZZIFY' variable_name ( linguistic_term[$variable_name.text] )* 'END_FUZZIFY'
                 pass 
                 self.match(self.input, 24, self.FOLLOW_24_in_fuzzify_block325)
                 self._state.following.append(self.FOLLOW_variable_name_in_fuzzify_block331)
                 variable_name7 = self.variable_name()
 
                 self._state.following.pop()
-                # FCL.g:194:5: ( linguistic_term[$variable_name.text] )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:237:5: ( linguistic_term[$variable_name.text] )*
                 while True: #loop12
                     alt12 = 2
                     LA12_0 = self.input.LA(1)
@@ -822,7 +858,7 @@ class FCLParser(Parser):
 
 
                     if alt12 == 1:
-                        # FCL.g:194:5: linguistic_term[$variable_name.text]
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:237:5: linguistic_term[$variable_name.text]
                         pass 
                         self._state.following.append(self.FOLLOW_linguistic_term_in_fuzzify_block337)
                         self.linguistic_term(((variable_name7 is not None) and [self.input.toString(variable_name7.start,variable_name7.stop)] or [None])[0])
@@ -839,7 +875,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -852,7 +889,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "defuzzify_block"
-    # FCL.g:198:1: defuzzify_block : 'DEFUZZIFY' f_variable_name ( linguistic_term[$f_variable_name.text] )* accumulation_method defuzzification_method[$f_variable_name.text] ( default_value[$f_variable_name.text] )? ( range )? 'END_DEFUZZIFY' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:241:1: defuzzify_block : 'DEFUZZIFY' f_variable_name ( linguistic_term[$f_variable_name.text] )* accumulation_method defuzzification_method[$f_variable_name.text] ( default_value[$f_variable_name.text] )? ( range )? 'END_DEFUZZIFY' ;
     def defuzzify_block(self, ):
 
         f_variable_name8 = None
@@ -860,15 +897,15 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:199:3: ( 'DEFUZZIFY' f_variable_name ( linguistic_term[$f_variable_name.text] )* accumulation_method defuzzification_method[$f_variable_name.text] ( default_value[$f_variable_name.text] )? ( range )? 'END_DEFUZZIFY' )
-                # FCL.g:200:5: 'DEFUZZIFY' f_variable_name ( linguistic_term[$f_variable_name.text] )* accumulation_method defuzzification_method[$f_variable_name.text] ( default_value[$f_variable_name.text] )? ( range )? 'END_DEFUZZIFY'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:242:3: ( 'DEFUZZIFY' f_variable_name ( linguistic_term[$f_variable_name.text] )* accumulation_method defuzzification_method[$f_variable_name.text] ( default_value[$f_variable_name.text] )? ( range )? 'END_DEFUZZIFY' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:243:5: 'DEFUZZIFY' f_variable_name ( linguistic_term[$f_variable_name.text] )* accumulation_method defuzzification_method[$f_variable_name.text] ( default_value[$f_variable_name.text] )? ( range )? 'END_DEFUZZIFY'
                 pass 
                 self.match(self.input, 26, self.FOLLOW_26_in_defuzzify_block362)
                 self._state.following.append(self.FOLLOW_f_variable_name_in_defuzzify_block368)
                 f_variable_name8 = self.f_variable_name()
 
                 self._state.following.pop()
-                # FCL.g:202:5: ( linguistic_term[$f_variable_name.text] )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:245:5: ( linguistic_term[$f_variable_name.text] )*
                 while True: #loop13
                     alt13 = 2
                     LA13_0 = self.input.LA(1)
@@ -878,7 +915,7 @@ class FCLParser(Parser):
 
 
                     if alt13 == 1:
-                        # FCL.g:202:5: linguistic_term[$f_variable_name.text]
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:245:5: linguistic_term[$f_variable_name.text]
                         pass 
                         self._state.following.append(self.FOLLOW_linguistic_term_in_defuzzify_block374)
                         self.linguistic_term(((f_variable_name8 is not None) and [self.input.toString(f_variable_name8.start,f_variable_name8.stop)] or [None])[0])
@@ -898,14 +935,14 @@ class FCLParser(Parser):
                 self.defuzzification_method(((f_variable_name8 is not None) and [self.input.toString(f_variable_name8.start,f_variable_name8.stop)] or [None])[0])
 
                 self._state.following.pop()
-                # FCL.g:205:5: ( default_value[$f_variable_name.text] )?
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:248:5: ( default_value[$f_variable_name.text] )?
                 alt14 = 2
                 LA14_0 = self.input.LA(1)
 
                 if (LA14_0 == 38) :
                     alt14 = 1
                 if alt14 == 1:
-                    # FCL.g:205:5: default_value[$f_variable_name.text]
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:248:5: default_value[$f_variable_name.text]
                     pass 
                     self._state.following.append(self.FOLLOW_default_value_in_defuzzify_block395)
                     self.default_value(((f_variable_name8 is not None) and [self.input.toString(f_variable_name8.start,f_variable_name8.stop)] or [None])[0])
@@ -914,14 +951,14 @@ class FCLParser(Parser):
 
 
 
-                # FCL.g:206:5: ( range )?
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:249:5: ( range )?
                 alt15 = 2
                 LA15_0 = self.input.LA(1)
 
                 if (LA15_0 == 40) :
                     alt15 = 1
                 if alt15 == 1:
-                    # FCL.g:206:5: range
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:249:5: range
                     pass 
                     self._state.following.append(self.FOLLOW_range_in_defuzzify_block403)
                     self.range()
@@ -935,7 +972,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -948,7 +986,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "rule_block"
-    # FCL.g:210:1: rule_block : 'RULEBLOCK' rule_block_name ( operator_definition )* ( activation_method )? ( rule[$rule_block_name.text] )* 'END_RULEBLOCK' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:253:1: rule_block : 'RULEBLOCK' rule_block_name ( operator_definition )* ( activation_method )? ( rule[$rule_block_name.text] )* 'END_RULEBLOCK' ;
     def rule_block(self, ):
 
         rule_block_name9 = None
@@ -956,15 +994,15 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:211:3: ( 'RULEBLOCK' rule_block_name ( operator_definition )* ( activation_method )? ( rule[$rule_block_name.text] )* 'END_RULEBLOCK' )
-                # FCL.g:212:5: 'RULEBLOCK' rule_block_name ( operator_definition )* ( activation_method )? ( rule[$rule_block_name.text] )* 'END_RULEBLOCK'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:254:3: ( 'RULEBLOCK' rule_block_name ( operator_definition )* ( activation_method )? ( rule[$rule_block_name.text] )* 'END_RULEBLOCK' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:255:5: 'RULEBLOCK' rule_block_name ( operator_definition )* ( activation_method )? ( rule[$rule_block_name.text] )* 'END_RULEBLOCK'
                 pass 
                 self.match(self.input, 28, self.FOLLOW_28_in_rule_block427)
                 self._state.following.append(self.FOLLOW_rule_block_name_in_rule_block435)
                 rule_block_name9 = self.rule_block_name()
 
                 self._state.following.pop()
-                # FCL.g:214:7: ( operator_definition )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:257:7: ( operator_definition )*
                 while True: #loop16
                     alt16 = 2
                     LA16_0 = self.input.LA(1)
@@ -974,7 +1012,7 @@ class FCLParser(Parser):
 
 
                     if alt16 == 1:
-                        # FCL.g:214:7: operator_definition
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:257:7: operator_definition
                         pass 
                         self._state.following.append(self.FOLLOW_operator_definition_in_rule_block443)
                         self.operator_definition()
@@ -986,14 +1024,14 @@ class FCLParser(Parser):
                         break #loop16
 
 
-                # FCL.g:215:7: ( activation_method )?
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:258:7: ( activation_method )?
                 alt17 = 2
                 LA17_0 = self.input.LA(1)
 
                 if (LA17_0 == 50) :
                     alt17 = 1
                 if alt17 == 1:
-                    # FCL.g:215:7: activation_method
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:258:7: activation_method
                     pass 
                     self._state.following.append(self.FOLLOW_activation_method_in_rule_block452)
                     self.activation_method()
@@ -1002,7 +1040,7 @@ class FCLParser(Parser):
 
 
 
-                # FCL.g:216:7: ( rule[$rule_block_name.text] )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:259:7: ( rule[$rule_block_name.text] )*
                 while True: #loop18
                     alt18 = 2
                     LA18_0 = self.input.LA(1)
@@ -1012,7 +1050,7 @@ class FCLParser(Parser):
 
 
                     if alt18 == 1:
-                        # FCL.g:216:7: rule[$rule_block_name.text]
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:259:7: rule[$rule_block_name.text]
                         pass 
                         self._state.following.append(self.FOLLOW_rule_in_rule_block461)
                         self.rule(((rule_block_name9 is not None) and [self.input.toString(rule_block_name9.start,rule_block_name9.stop)] or [None])[0])
@@ -1029,7 +1067,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1042,13 +1081,13 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "option_block"
-    # FCL.g:219:1: option_block : 'OPTION' 'END_OPTION' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:262:1: option_block : 'OPTION' 'END_OPTION' ;
     def option_block(self, ):
 
         try:
             try:
-                # FCL.g:219:14: ( 'OPTION' 'END_OPTION' )
-                # FCL.g:219:16: 'OPTION' 'END_OPTION'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:262:14: ( 'OPTION' 'END_OPTION' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:262:16: 'OPTION' 'END_OPTION'
                 pass 
                 self.match(self.input, 30, self.FOLLOW_30_in_option_block477)
                 self.match(self.input, 31, self.FOLLOW_31_in_option_block481)
@@ -1056,7 +1095,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1069,7 +1109,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "linguistic_term"
-    # FCL.g:224:1: linguistic_term[var_name] : 'TERM' term_name ':=' membership_function ';' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:267:1: linguistic_term[var_name] : 'TERM' term_name ':=' membership_function ';' ;
     def linguistic_term(self, var_name):
 
         term_name10 = None
@@ -1079,8 +1119,8 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:225:3: ( 'TERM' term_name ':=' membership_function ';' )
-                # FCL.g:226:3: 'TERM' term_name ':=' membership_function ';'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:268:3: ( 'TERM' term_name ':=' membership_function ';' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:269:3: 'TERM' term_name ':=' membership_function ';'
                 pass 
                 self.match(self.input, 32, self.FOLLOW_32_in_linguistic_term496)
                 self._state.following.append(self.FOLLOW_term_name_in_linguistic_term498)
@@ -1102,7 +1142,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1115,7 +1156,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "membership_function"
-    # FCL.g:233:1: membership_function returns [set] : ( singleton | points );
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:276:1: membership_function returns [set] : ( singleton | points | pyfuzzy_set );
     def membership_function(self, ):
 
         set = None
@@ -1124,16 +1165,29 @@ class FCLParser(Parser):
 
         points13 = None
 
+        pyfuzzy_set14 = None
+
 
         try:
             try:
-                # FCL.g:234:3: ( singleton | points )
-                alt19 = 2
-                LA19_0 = self.input.LA(1)
-
-                if (LA19_0 == Identifier or (Integer_literal <= LA19_0 <= Real_literal)) :
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:277:3: ( singleton | points | pyfuzzy_set )
+                alt19 = 3
+                LA19 = self.input.LA(1)
+                if LA19 == Integer_literal or LA19 == Real_literal:
                     alt19 = 1
-                elif (LA19_0 == 20 or LA19_0 == 34) :
+                elif LA19 == Identifier:
+                    LA19_2 = self.input.LA(2)
+
+                    if (LA19_2 == 34) :
+                        alt19 = 3
+                    elif (LA19_2 == 20) :
+                        alt19 = 1
+                    else:
+                        nvae = NoViableAltException("", 19, 2, self.input)
+
+                        raise nvae
+
+                elif LA19 == 20 or LA19 == 34:
                     alt19 = 2
                 else:
                     nvae = NoViableAltException("", 19, 0, self.input)
@@ -1141,7 +1195,7 @@ class FCLParser(Parser):
                     raise nvae
 
                 if alt19 == 1:
-                    # FCL.g:235:5: singleton
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:278:5: singleton
                     pass 
                     self._state.following.append(self.FOLLOW_singleton_in_membership_function526)
                     singleton12 = self.singleton()
@@ -1153,7 +1207,7 @@ class FCLParser(Parser):
 
 
                 elif alt19 == 2:
-                    # FCL.g:237:5: points
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:280:5: points
                     pass 
                     self._state.following.append(self.FOLLOW_points_in_membership_function538)
                     points13 = self.points()
@@ -1164,8 +1218,21 @@ class FCLParser(Parser):
                     #action end
 
 
+                elif alt19 == 3:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:282:5: pyfuzzy_set
+                    pass 
+                    self._state.following.append(self.FOLLOW_pyfuzzy_set_in_membership_function550)
+                    pyfuzzy_set14 = self.pyfuzzy_set()
 
-            except RecognitionException, re:
+                    self._state.following.pop()
+                    #action start
+                    set =  pyfuzzy_set14
+                    #action end
+
+
+
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1178,17 +1245,17 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "singleton"
-    # FCL.g:240:1: singleton returns [set] : ( numeric_literal | variable_name );
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:285:1: singleton returns [set] : ( numeric_literal | variable_name );
     def singleton(self, ):
 
         set = None
 
-        numeric_literal14 = None
+        numeric_literal15 = None
 
 
         try:
             try:
-                # FCL.g:241:3: ( numeric_literal | variable_name )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:286:3: ( numeric_literal | variable_name )
                 alt20 = 2
                 LA20_0 = self.input.LA(1)
 
@@ -1202,28 +1269,29 @@ class FCLParser(Parser):
                     raise nvae
 
                 if alt20 == 1:
-                    # FCL.g:242:5: numeric_literal
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:287:5: numeric_literal
                     pass 
-                    self._state.following.append(self.FOLLOW_numeric_literal_in_singleton561)
-                    numeric_literal14 = self.numeric_literal()
+                    self._state.following.append(self.FOLLOW_numeric_literal_in_singleton573)
+                    numeric_literal15 = self.numeric_literal()
 
                     self._state.following.pop()
                     #action start
-                    set =  fuzzy.set.Singleton.Singleton(float(((numeric_literal14 is not None) and [self.input.toString(numeric_literal14.start,numeric_literal14.stop)] or [None])[0]))
+                    set =  fuzzy.set.Singleton.Singleton(float(((numeric_literal15 is not None) and [self.input.toString(numeric_literal15.start,numeric_literal15.stop)] or [None])[0]))
                     #action end
 
 
                 elif alt20 == 2:
-                    # FCL.g:244:5: variable_name
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:289:5: variable_name
                     pass 
-                    self._state.following.append(self.FOLLOW_variable_name_in_singleton573)
+                    self._state.following.append(self.FOLLOW_variable_name_in_singleton585)
                     self.variable_name()
 
                     self._state.following.pop()
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1236,7 +1304,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "points"
-    # FCL.g:247:1: points returns [set] : ( '(' (x= numeric_literal | variable_name ) ',' y= numeric_literal ')' )* ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:292:1: points returns [set] : ( '(' (x= numeric_literal | variable_name ) ',' y= numeric_literal ')' )* ;
     def points(self, ):
 
         set = None
@@ -1251,10 +1319,10 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:251:3: ( ( '(' (x= numeric_literal | variable_name ) ',' y= numeric_literal ')' )* )
-                # FCL.g:252:4: ( '(' (x= numeric_literal | variable_name ) ',' y= numeric_literal ')' )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:296:3: ( ( '(' (x= numeric_literal | variable_name ) ',' y= numeric_literal ')' )* )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:297:4: ( '(' (x= numeric_literal | variable_name ) ',' y= numeric_literal ')' )*
                 pass 
-                # FCL.g:252:4: ( '(' (x= numeric_literal | variable_name ) ',' y= numeric_literal ')' )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:297:4: ( '(' (x= numeric_literal | variable_name ) ',' y= numeric_literal ')' )*
                 while True: #loop22
                     alt22 = 2
                     LA22_0 = self.input.LA(1)
@@ -1264,10 +1332,10 @@ class FCLParser(Parser):
 
 
                     if alt22 == 1:
-                        # FCL.g:253:6: '(' (x= numeric_literal | variable_name ) ',' y= numeric_literal ')'
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:298:6: '(' (x= numeric_literal | variable_name ) ',' y= numeric_literal ')'
                         pass 
-                        self.match(self.input, 34, self.FOLLOW_34_in_points605)
-                        # FCL.g:254:6: (x= numeric_literal | variable_name )
+                        self.match(self.input, 34, self.FOLLOW_34_in_points617)
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:299:6: (x= numeric_literal | variable_name )
                         alt21 = 2
                         LA21_0 = self.input.LA(1)
 
@@ -1281,32 +1349,32 @@ class FCLParser(Parser):
                             raise nvae
 
                         if alt21 == 1:
-                            # FCL.g:254:7: x= numeric_literal
+                            # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:299:7: x= numeric_literal
                             pass 
-                            self._state.following.append(self.FOLLOW_numeric_literal_in_points615)
+                            self._state.following.append(self.FOLLOW_numeric_literal_in_points627)
                             x = self.numeric_literal()
 
                             self._state.following.pop()
 
 
                         elif alt21 == 2:
-                            # FCL.g:254:27: variable_name
+                            # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:299:27: variable_name
                             pass 
-                            self._state.following.append(self.FOLLOW_variable_name_in_points619)
+                            self._state.following.append(self.FOLLOW_variable_name_in_points631)
                             self.variable_name()
 
                             self._state.following.pop()
 
 
 
-                        self.match(self.input, 35, self.FOLLOW_35_in_points627)
-                        self._state.following.append(self.FOLLOW_numeric_literal_in_points636)
+                        self.match(self.input, 35, self.FOLLOW_35_in_points639)
+                        self._state.following.append(self.FOLLOW_numeric_literal_in_points648)
                         y = self.numeric_literal()
 
                         self._state.following.pop()
-                        self.match(self.input, 36, self.FOLLOW_36_in_points643)
+                        self.match(self.input, 36, self.FOLLOW_36_in_points655)
                         #action start
-                        p.append((float(((x is not None) and [self.input.toString(x.start,x.stop)] or [None])[0]),float(((y is not None) and [self.input.toString(y.start,y.stop)] or [None])[0])));
+                        p.append((float(((x is not None) and [self.input.toString(x.start,x.stop)] or [None])[0]), float(((y is not None) and [self.input.toString(y.start,y.stop)] or [None])[0])));
                         #action end
 
 
@@ -1321,7 +1389,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1333,29 +1402,118 @@ class FCLParser(Parser):
     # $ANTLR end "points"
 
 
-    # $ANTLR start "defuzzification_method"
-    # FCL.g:265:1: defuzzification_method[var_name] : 'METHOD' ':' Identifier ';' ;
-    def defuzzification_method(self, var_name):
+    # $ANTLR start "pyfuzzy_set"
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:308:1: pyfuzzy_set returns [set] : Identifier '(' (p1= numeric_literal ( ',' pn= numeric_literal )* )? ')' ;
+    def pyfuzzy_set(self, ):
 
-        Identifier15 = None
+        set = None
+
+        Identifier16 = None
+        p1 = None
+
+        pn = None
+
+
+               
+        p = []
 
         try:
             try:
-                # FCL.g:265:35: ( 'METHOD' ':' Identifier ';' )
-                # FCL.g:266:3: 'METHOD' ':' Identifier ';'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:312:3: ( Identifier '(' (p1= numeric_literal ( ',' pn= numeric_literal )* )? ')' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:313:4: Identifier '(' (p1= numeric_literal ( ',' pn= numeric_literal )* )? ')'
                 pass 
-                self.match(self.input, 37, self.FOLLOW_37_in_defuzzification_method679)
-                self.match(self.input, 18, self.FOLLOW_18_in_defuzzification_method681)
-                Identifier15=self.match(self.input, Identifier, self.FOLLOW_Identifier_in_defuzzification_method685)
+                Identifier16=self.match(self.input, Identifier, self.FOLLOW_Identifier_in_pyfuzzy_set699)
+                self.match(self.input, 34, self.FOLLOW_34_in_pyfuzzy_set704)
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:315:4: (p1= numeric_literal ( ',' pn= numeric_literal )* )?
+                alt24 = 2
+                LA24_0 = self.input.LA(1)
+
+                if ((Integer_literal <= LA24_0 <= Real_literal)) :
+                    alt24 = 1
+                if alt24 == 1:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:316:4: p1= numeric_literal ( ',' pn= numeric_literal )*
+                    pass 
+                    self._state.following.append(self.FOLLOW_numeric_literal_in_pyfuzzy_set716)
+                    p1 = self.numeric_literal()
+
+                    self._state.following.pop()
+                    #action start
+                    p.append(float(((p1 is not None) and [self.input.toString(p1.start,p1.stop)] or [None])[0]));
+                    #action end
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:317:5: ( ',' pn= numeric_literal )*
+                    while True: #loop23
+                        alt23 = 2
+                        LA23_0 = self.input.LA(1)
+
+                        if (LA23_0 == 35) :
+                            alt23 = 1
+
+
+                        if alt23 == 1:
+                            # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:318:7: ',' pn= numeric_literal
+                            pass 
+                            self.match(self.input, 35, self.FOLLOW_35_in_pyfuzzy_set732)
+                            self._state.following.append(self.FOLLOW_numeric_literal_in_pyfuzzy_set742)
+                            pn = self.numeric_literal()
+
+                            self._state.following.pop()
+                            #action start
+                            p.append(float(((pn is not None) and [self.input.toString(pn.start,pn.stop)] or [None])[0]));
+                            #action end
+
+
+                        else:
+                            break #loop23
+
+
+
+
+
+                self.match(self.input, 36, self.FOLLOW_36_in_pyfuzzy_set762)
                 #action start
-                self.System.variables[var_name].defuzzify = getDefuzzificationMethod(Identifier15.text);
+                set =  getSet(Identifier16.text,p)
                 #action end
-                self.match(self.input, 20, self.FOLLOW_20_in_defuzzification_method691)
 
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
+                self.reportError(re)
+                self.recover(self.input, re)
+        finally:
+
+            pass
+
+        return set
+
+    # $ANTLR end "pyfuzzy_set"
+
+
+    # $ANTLR start "defuzzification_method"
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:328:1: defuzzification_method[var_name] : 'METHOD' ':' Identifier ';' ;
+    def defuzzification_method(self, var_name):
+
+        Identifier17 = None
+
+        try:
+            try:
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:328:35: ( 'METHOD' ':' Identifier ';' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:329:3: 'METHOD' ':' Identifier ';'
+                pass 
+                self.match(self.input, 37, self.FOLLOW_37_in_defuzzification_method785)
+                self.match(self.input, 18, self.FOLLOW_18_in_defuzzification_method787)
+                Identifier17=self.match(self.input, Identifier, self.FOLLOW_Identifier_in_defuzzification_method791)
+                #action start
+                self.System.variables[var_name].defuzzify = getDefuzzificationMethod(Identifier17.text);
+                #action end
+                self.match(self.input, 20, self.FOLLOW_20_in_defuzzification_method797)
+
+
+
+
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1368,60 +1526,61 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "default_value"
-    # FCL.g:271:1: default_value[var_name] : 'DEFAULT' ':=' ( numeric_literal | 'NC' ) ';' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:334:1: default_value[var_name] : 'DEFAULT' ':=' ( numeric_literal | 'NC' ) ';' ;
     def default_value(self, var_name):
 
-        numeric_literal16 = None
+        numeric_literal18 = None
 
 
         try:
             try:
-                # FCL.g:271:26: ( 'DEFAULT' ':=' ( numeric_literal | 'NC' ) ';' )
-                # FCL.g:272:3: 'DEFAULT' ':=' ( numeric_literal | 'NC' ) ';'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:334:26: ( 'DEFAULT' ':=' ( numeric_literal | 'NC' ) ';' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:335:3: 'DEFAULT' ':=' ( numeric_literal | 'NC' ) ';'
                 pass 
-                self.match(self.input, 38, self.FOLLOW_38_in_default_value706)
-                self.match(self.input, 33, self.FOLLOW_33_in_default_value708)
-                # FCL.g:273:3: ( numeric_literal | 'NC' )
-                alt23 = 2
-                LA23_0 = self.input.LA(1)
+                self.match(self.input, 38, self.FOLLOW_38_in_default_value812)
+                self.match(self.input, 33, self.FOLLOW_33_in_default_value814)
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:336:3: ( numeric_literal | 'NC' )
+                alt25 = 2
+                LA25_0 = self.input.LA(1)
 
-                if ((Integer_literal <= LA23_0 <= Real_literal)) :
-                    alt23 = 1
-                elif (LA23_0 == 39) :
-                    alt23 = 2
+                if ((Integer_literal <= LA25_0 <= Real_literal)) :
+                    alt25 = 1
+                elif (LA25_0 == 39) :
+                    alt25 = 2
                 else:
-                    nvae = NoViableAltException("", 23, 0, self.input)
+                    nvae = NoViableAltException("", 25, 0, self.input)
 
                     raise nvae
 
-                if alt23 == 1:
-                    # FCL.g:274:5: numeric_literal
+                if alt25 == 1:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:337:5: numeric_literal
                     pass 
-                    self._state.following.append(self.FOLLOW_numeric_literal_in_default_value718)
-                    numeric_literal16 = self.numeric_literal()
+                    self._state.following.append(self.FOLLOW_numeric_literal_in_default_value824)
+                    numeric_literal18 = self.numeric_literal()
 
                     self._state.following.pop()
                     #action start
-                    self.System.variables[var_name].defuzzify.failsafe = float(((numeric_literal16 is not None) and [self.input.toString(numeric_literal16.start,numeric_literal16.stop)] or [None])[0]);
+                    self.System.variables[var_name].defuzzify.failsafe = float(((numeric_literal18 is not None) and [self.input.toString(numeric_literal18.start,numeric_literal18.stop)] or [None])[0]);
                     #action end
 
 
-                elif alt23 == 2:
-                    # FCL.g:276:5: 'NC'
+                elif alt25 == 2:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:339:5: 'NC'
                     pass 
-                    self.match(self.input, 39, self.FOLLOW_39_in_default_value730)
+                    self.match(self.input, 39, self.FOLLOW_39_in_default_value836)
                     #action start
                     self.System.variables[var_name].defuzzify.failsafe = None;
                     #action end
 
 
 
-                self.match(self.input, 20, self.FOLLOW_20_in_default_value740)
+                self.match(self.input, 20, self.FOLLOW_20_in_default_value846)
 
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1434,33 +1593,34 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "range"
-    # FCL.g:281:1: range : 'RANGE' ':=' '(' numeric_literal '..' numeric_literal ')' ';' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:344:1: range : 'RANGE' ':=' '(' numeric_literal '..' numeric_literal ')' ';' ;
     def range(self, ):
 
         try:
             try:
-                # FCL.g:281:7: ( 'RANGE' ':=' '(' numeric_literal '..' numeric_literal ')' ';' )
-                # FCL.g:281:9: 'RANGE' ':=' '(' numeric_literal '..' numeric_literal ')' ';'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:344:7: ( 'RANGE' ':=' '(' numeric_literal '..' numeric_literal ')' ';' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:344:9: 'RANGE' ':=' '(' numeric_literal '..' numeric_literal ')' ';'
                 pass 
-                self.match(self.input, 40, self.FOLLOW_40_in_range751)
-                self.match(self.input, 33, self.FOLLOW_33_in_range753)
-                self.match(self.input, 34, self.FOLLOW_34_in_range755)
-                self._state.following.append(self.FOLLOW_numeric_literal_in_range757)
+                self.match(self.input, 40, self.FOLLOW_40_in_range857)
+                self.match(self.input, 33, self.FOLLOW_33_in_range859)
+                self.match(self.input, 34, self.FOLLOW_34_in_range861)
+                self._state.following.append(self.FOLLOW_numeric_literal_in_range863)
                 self.numeric_literal()
 
                 self._state.following.pop()
-                self.match(self.input, 41, self.FOLLOW_41_in_range759)
-                self._state.following.append(self.FOLLOW_numeric_literal_in_range761)
+                self.match(self.input, 41, self.FOLLOW_41_in_range865)
+                self._state.following.append(self.FOLLOW_numeric_literal_in_range867)
                 self.numeric_literal()
 
                 self._state.following.pop()
-                self.match(self.input, 36, self.FOLLOW_36_in_range763)
-                self.match(self.input, 20, self.FOLLOW_20_in_range765)
+                self.match(self.input, 36, self.FOLLOW_36_in_range869)
+                self.match(self.input, 20, self.FOLLOW_20_in_range871)
 
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1473,7 +1633,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "operator_name_any"
-    # FCL.g:284:1: operator_name_any returns [op] : i1= Identifier ( '[' param= numeric_literal ']' )? ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:347:1: operator_name_any returns [op] : i1= Identifier ( '[' param= numeric_literal ']' )? ;
     def operator_name_any(self, ):
 
         op = None
@@ -1484,25 +1644,25 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:285:3: (i1= Identifier ( '[' param= numeric_literal ']' )? )
-                # FCL.g:286:3: i1= Identifier ( '[' param= numeric_literal ']' )?
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:348:3: (i1= Identifier ( '[' param= numeric_literal ']' )? )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:349:3: i1= Identifier ( '[' param= numeric_literal ']' )?
                 pass 
-                i1=self.match(self.input, Identifier, self.FOLLOW_Identifier_in_operator_name_any784)
-                # FCL.g:286:17: ( '[' param= numeric_literal ']' )?
-                alt24 = 2
-                LA24_0 = self.input.LA(1)
+                i1=self.match(self.input, Identifier, self.FOLLOW_Identifier_in_operator_name_any890)
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:349:17: ( '[' param= numeric_literal ']' )?
+                alt26 = 2
+                LA26_0 = self.input.LA(1)
 
-                if (LA24_0 == 42) :
-                    alt24 = 1
-                if alt24 == 1:
-                    # FCL.g:286:18: '[' param= numeric_literal ']'
+                if (LA26_0 == 42) :
+                    alt26 = 1
+                if alt26 == 1:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:349:18: '[' param= numeric_literal ']'
                     pass 
-                    self.match(self.input, 42, self.FOLLOW_42_in_operator_name_any787)
-                    self._state.following.append(self.FOLLOW_numeric_literal_in_operator_name_any791)
+                    self.match(self.input, 42, self.FOLLOW_42_in_operator_name_any893)
+                    self._state.following.append(self.FOLLOW_numeric_literal_in_operator_name_any897)
                     param = self.numeric_literal()
 
                     self._state.following.pop()
-                    self.match(self.input, 43, self.FOLLOW_43_in_operator_name_any793)
+                    self.match(self.input, 43, self.FOLLOW_43_in_operator_name_any899)
 
 
 
@@ -1512,14 +1672,15 @@ class FCLParser(Parser):
                     p = float(((param is not None) and [self.input.toString(param.start,param.stop)] or [None])[0])
                 else:
                     p = None
-                op =  getNorm(i1.text,p)
+                op =  getNorm(i1.text, p)
                   
                 #action end
 
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1532,7 +1693,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "operator_name_AND"
-    # FCL.g:296:1: operator_name_AND returns [op] : ( ( 'MIN' ) | ( 'PROD' ) | ( 'BDIF' ) | (norm= operator_name_any ) );
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:359:1: operator_name_AND returns [op] : ( ( 'MIN' ) | ( 'PROD' ) | ( 'BDIF' ) | (norm= operator_name_any ) );
     def operator_name_AND(self, ):
 
         op = None
@@ -1542,29 +1703,29 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:297:3: ( ( 'MIN' ) | ( 'PROD' ) | ( 'BDIF' ) | (norm= operator_name_any ) )
-                alt25 = 4
-                LA25 = self.input.LA(1)
-                if LA25 == 44:
-                    alt25 = 1
-                elif LA25 == 45:
-                    alt25 = 2
-                elif LA25 == 46:
-                    alt25 = 3
-                elif LA25 == Identifier:
-                    alt25 = 4
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:360:3: ( ( 'MIN' ) | ( 'PROD' ) | ( 'BDIF' ) | (norm= operator_name_any ) )
+                alt27 = 4
+                LA27 = self.input.LA(1)
+                if LA27 == 44:
+                    alt27 = 1
+                elif LA27 == 45:
+                    alt27 = 2
+                elif LA27 == 46:
+                    alt27 = 3
+                elif LA27 == Identifier:
+                    alt27 = 4
                 else:
-                    nvae = NoViableAltException("", 25, 0, self.input)
+                    nvae = NoViableAltException("", 27, 0, self.input)
 
                     raise nvae
 
-                if alt25 == 1:
-                    # FCL.g:297:5: ( 'MIN' )
+                if alt27 == 1:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:360:5: ( 'MIN' )
                     pass 
-                    # FCL.g:297:5: ( 'MIN' )
-                    # FCL.g:297:6: 'MIN'
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:360:5: ( 'MIN' )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:360:6: 'MIN'
                     pass 
-                    self.match(self.input, 44, self.FOLLOW_44_in_operator_name_AND816)
+                    self.match(self.input, 44, self.FOLLOW_44_in_operator_name_AND922)
                     #action start
                     op =  getNorm("Min")
                     #action end
@@ -1573,13 +1734,13 @@ class FCLParser(Parser):
 
 
 
-                elif alt25 == 2:
-                    # FCL.g:298:5: ( 'PROD' )
+                elif alt27 == 2:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:361:5: ( 'PROD' )
                     pass 
-                    # FCL.g:298:5: ( 'PROD' )
-                    # FCL.g:298:6: 'PROD'
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:361:5: ( 'PROD' )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:361:6: 'PROD'
                     pass 
-                    self.match(self.input, 45, self.FOLLOW_45_in_operator_name_AND826)
+                    self.match(self.input, 45, self.FOLLOW_45_in_operator_name_AND932)
                     #action start
                     op =  getNorm("AlgebraicProduct")
                     #action end
@@ -1588,13 +1749,13 @@ class FCLParser(Parser):
 
 
 
-                elif alt25 == 3:
-                    # FCL.g:299:5: ( 'BDIF' )
+                elif alt27 == 3:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:362:5: ( 'BDIF' )
                     pass 
-                    # FCL.g:299:5: ( 'BDIF' )
-                    # FCL.g:299:6: 'BDIF'
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:362:5: ( 'BDIF' )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:362:6: 'BDIF'
                     pass 
-                    self.match(self.input, 46, self.FOLLOW_46_in_operator_name_AND836)
+                    self.match(self.input, 46, self.FOLLOW_46_in_operator_name_AND942)
                     #action start
                     op =  getNorm("BoundedDifference")
                     #action end
@@ -1603,13 +1764,13 @@ class FCLParser(Parser):
 
 
 
-                elif alt25 == 4:
-                    # FCL.g:300:5: (norm= operator_name_any )
+                elif alt27 == 4:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:363:5: (norm= operator_name_any )
                     pass 
-                    # FCL.g:300:5: (norm= operator_name_any )
-                    # FCL.g:300:6: norm= operator_name_any
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:363:5: (norm= operator_name_any )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:363:6: norm= operator_name_any
                     pass 
-                    self._state.following.append(self.FOLLOW_operator_name_any_in_operator_name_AND849)
+                    self._state.following.append(self.FOLLOW_operator_name_any_in_operator_name_AND955)
                     norm = self.operator_name_any()
 
                     self._state.following.pop()
@@ -1622,7 +1783,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1635,7 +1797,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "operator_name_OR"
-    # FCL.g:303:1: operator_name_OR returns [op] : ( ( 'MAX' ) | ( 'ASUM' ) | ( 'BSUM' ) | (norm= operator_name_any ) );
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:366:1: operator_name_OR returns [op] : ( ( 'MAX' ) | ( 'ASUM' ) | ( 'BSUM' ) | (norm= operator_name_any ) );
     def operator_name_OR(self, ):
 
         op = None
@@ -1645,29 +1807,29 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:304:3: ( ( 'MAX' ) | ( 'ASUM' ) | ( 'BSUM' ) | (norm= operator_name_any ) )
-                alt26 = 4
-                LA26 = self.input.LA(1)
-                if LA26 == 47:
-                    alt26 = 1
-                elif LA26 == 48:
-                    alt26 = 2
-                elif LA26 == 49:
-                    alt26 = 3
-                elif LA26 == Identifier:
-                    alt26 = 4
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:367:3: ( ( 'MAX' ) | ( 'ASUM' ) | ( 'BSUM' ) | (norm= operator_name_any ) )
+                alt28 = 4
+                LA28 = self.input.LA(1)
+                if LA28 == 47:
+                    alt28 = 1
+                elif LA28 == 48:
+                    alt28 = 2
+                elif LA28 == 49:
+                    alt28 = 3
+                elif LA28 == Identifier:
+                    alt28 = 4
                 else:
-                    nvae = NoViableAltException("", 26, 0, self.input)
+                    nvae = NoViableAltException("", 28, 0, self.input)
 
                     raise nvae
 
-                if alt26 == 1:
-                    # FCL.g:304:5: ( 'MAX' )
+                if alt28 == 1:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:367:5: ( 'MAX' )
                     pass 
-                    # FCL.g:304:5: ( 'MAX' )
-                    # FCL.g:304:6: 'MAX'
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:367:5: ( 'MAX' )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:367:6: 'MAX'
                     pass 
-                    self.match(self.input, 47, self.FOLLOW_47_in_operator_name_OR870)
+                    self.match(self.input, 47, self.FOLLOW_47_in_operator_name_OR976)
                     #action start
                     op =  getNorm("Max")
                     #action end
@@ -1676,13 +1838,13 @@ class FCLParser(Parser):
 
 
 
-                elif alt26 == 2:
-                    # FCL.g:305:5: ( 'ASUM' )
+                elif alt28 == 2:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:368:5: ( 'ASUM' )
                     pass 
-                    # FCL.g:305:5: ( 'ASUM' )
-                    # FCL.g:305:6: 'ASUM'
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:368:5: ( 'ASUM' )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:368:6: 'ASUM'
                     pass 
-                    self.match(self.input, 48, self.FOLLOW_48_in_operator_name_OR880)
+                    self.match(self.input, 48, self.FOLLOW_48_in_operator_name_OR986)
                     #action start
                     op =  getNorm("AlgebraicSum")
                     #action end
@@ -1691,13 +1853,13 @@ class FCLParser(Parser):
 
 
 
-                elif alt26 == 3:
-                    # FCL.g:306:5: ( 'BSUM' )
+                elif alt28 == 3:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:369:5: ( 'BSUM' )
                     pass 
-                    # FCL.g:306:5: ( 'BSUM' )
-                    # FCL.g:306:6: 'BSUM'
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:369:5: ( 'BSUM' )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:369:6: 'BSUM'
                     pass 
-                    self.match(self.input, 49, self.FOLLOW_49_in_operator_name_OR890)
+                    self.match(self.input, 49, self.FOLLOW_49_in_operator_name_OR996)
                     #action start
                     op =  getNorm("BoundedSum")
                     #action end
@@ -1706,13 +1868,13 @@ class FCLParser(Parser):
 
 
 
-                elif alt26 == 4:
-                    # FCL.g:307:5: (norm= operator_name_any )
+                elif alt28 == 4:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:370:5: (norm= operator_name_any )
                     pass 
-                    # FCL.g:307:5: (norm= operator_name_any )
-                    # FCL.g:307:6: norm= operator_name_any
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:370:5: (norm= operator_name_any )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:370:6: norm= operator_name_any
                     pass 
-                    self._state.following.append(self.FOLLOW_operator_name_any_in_operator_name_OR903)
+                    self._state.following.append(self.FOLLOW_operator_name_any_in_operator_name_OR1009)
                     norm = self.operator_name_any()
 
                     self._state.following.pop()
@@ -1725,7 +1887,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1738,7 +1901,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "operator_definition"
-    # FCL.g:313:1: operator_definition : ( (or_name= OR_ ':' or_op= operator_name_OR ) | (and_name= AND_ ':' and_op= operator_name_AND ) ) ';' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:376:1: operator_definition : ( (or_name= OR_ ':' or_op= operator_name_OR ) | (and_name= AND_ ':' and_op= operator_name_AND ) ) ';' ;
     def operator_definition(self, ):
 
         or_name = None
@@ -1750,56 +1913,56 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:313:21: ( ( (or_name= OR_ ':' or_op= operator_name_OR ) | (and_name= AND_ ':' and_op= operator_name_AND ) ) ';' )
-                # FCL.g:314:1: ( (or_name= OR_ ':' or_op= operator_name_OR ) | (and_name= AND_ ':' and_op= operator_name_AND ) ) ';'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:376:21: ( ( (or_name= OR_ ':' or_op= operator_name_OR ) | (and_name= AND_ ':' and_op= operator_name_AND ) ) ';' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:377:1: ( (or_name= OR_ ':' or_op= operator_name_OR ) | (and_name= AND_ ':' and_op= operator_name_AND ) ) ';'
                 pass 
-                # FCL.g:314:1: ( (or_name= OR_ ':' or_op= operator_name_OR ) | (and_name= AND_ ':' and_op= operator_name_AND ) )
-                alt27 = 2
-                LA27_0 = self.input.LA(1)
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:377:1: ( (or_name= OR_ ':' or_op= operator_name_OR ) | (and_name= AND_ ':' and_op= operator_name_AND ) )
+                alt29 = 2
+                LA29_0 = self.input.LA(1)
 
-                if (LA27_0 == OR_) :
-                    alt27 = 1
-                elif (LA27_0 == AND_) :
-                    alt27 = 2
+                if (LA29_0 == OR_) :
+                    alt29 = 1
+                elif (LA29_0 == AND_) :
+                    alt29 = 2
                 else:
-                    nvae = NoViableAltException("", 27, 0, self.input)
+                    nvae = NoViableAltException("", 29, 0, self.input)
 
                     raise nvae
 
-                if alt27 == 1:
-                    # FCL.g:315:1: (or_name= OR_ ':' or_op= operator_name_OR )
+                if alt29 == 1:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:378:1: (or_name= OR_ ':' or_op= operator_name_OR )
                     pass 
-                    # FCL.g:315:1: (or_name= OR_ ':' or_op= operator_name_OR )
-                    # FCL.g:315:2: or_name= OR_ ':' or_op= operator_name_OR
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:378:1: (or_name= OR_ ':' or_op= operator_name_OR )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:378:2: or_name= OR_ ':' or_op= operator_name_OR
                     pass 
-                    or_name=self.match(self.input, OR_, self.FOLLOW_OR__in_operator_definition947)
-                    self.match(self.input, 18, self.FOLLOW_18_in_operator_definition949)
-                    self._state.following.append(self.FOLLOW_operator_name_OR_in_operator_definition953)
+                    or_name=self.match(self.input, OR_, self.FOLLOW_OR__in_operator_definition1053)
+                    self.match(self.input, 18, self.FOLLOW_18_in_operator_definition1055)
+                    self._state.following.append(self.FOLLOW_operator_name_OR_in_operator_definition1059)
                     or_op = self.operator_name_OR()
 
                     self._state.following.pop()
                     #action start
-                    defineOperator(or_name.text,or_op);
+                    defineOperator(or_name.text, or_op);
                     #action end
 
 
 
 
 
-                elif alt27 == 2:
-                    # FCL.g:317:1: (and_name= AND_ ':' and_op= operator_name_AND )
+                elif alt29 == 2:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:380:1: (and_name= AND_ ':' and_op= operator_name_AND )
                     pass 
-                    # FCL.g:317:1: (and_name= AND_ ':' and_op= operator_name_AND )
-                    # FCL.g:317:2: and_name= AND_ ':' and_op= operator_name_AND
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:380:1: (and_name= AND_ ':' and_op= operator_name_AND )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:380:2: and_name= AND_ ':' and_op= operator_name_AND
                     pass 
-                    and_name=self.match(self.input, AND_, self.FOLLOW_AND__in_operator_definition964)
-                    self.match(self.input, 18, self.FOLLOW_18_in_operator_definition966)
-                    self._state.following.append(self.FOLLOW_operator_name_AND_in_operator_definition970)
+                    and_name=self.match(self.input, AND_, self.FOLLOW_AND__in_operator_definition1070)
+                    self.match(self.input, 18, self.FOLLOW_18_in_operator_definition1072)
+                    self._state.following.append(self.FOLLOW_operator_name_AND_in_operator_definition1076)
                     and_op = self.operator_name_AND()
 
                     self._state.following.pop()
                     #action start
-                    defineOperator(and_name.text,and_op);
+                    defineOperator(and_name.text, and_op);
                     #action end
 
 
@@ -1807,12 +1970,13 @@ class FCLParser(Parser):
 
 
 
-                self.match(self.input, 20, self.FOLLOW_20_in_operator_definition979)
+                self.match(self.input, 20, self.FOLLOW_20_in_operator_definition1085)
 
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1825,16 +1989,16 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "activation_method"
-    # FCL.g:322:1: activation_method : 'ACT' ':' ( 'PROD' | 'MIN' ) ';' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:385:1: activation_method : 'ACT' ':' ( 'PROD' | 'MIN' ) ';' ;
     def activation_method(self, ):
 
         try:
             try:
-                # FCL.g:322:19: ( 'ACT' ':' ( 'PROD' | 'MIN' ) ';' )
-                # FCL.g:322:21: 'ACT' ':' ( 'PROD' | 'MIN' ) ';'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:385:19: ( 'ACT' ':' ( 'PROD' | 'MIN' ) ';' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:385:21: 'ACT' ':' ( 'PROD' | 'MIN' ) ';'
                 pass 
-                self.match(self.input, 50, self.FOLLOW_50_in_activation_method988)
-                self.match(self.input, 18, self.FOLLOW_18_in_activation_method990)
+                self.match(self.input, 50, self.FOLLOW_50_in_activation_method1094)
+                self.match(self.input, 18, self.FOLLOW_18_in_activation_method1096)
                 if (44 <= self.input.LA(1) <= 45):
                     self.input.consume()
                     self._state.errorRecovery = False
@@ -1844,12 +2008,13 @@ class FCLParser(Parser):
                     raise mse
 
 
-                self.match(self.input, 20, self.FOLLOW_20_in_activation_method1000)
+                self.match(self.input, 20, self.FOLLOW_20_in_activation_method1106)
 
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1862,16 +2027,16 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "accumulation_method"
-    # FCL.g:324:1: accumulation_method : 'ACCU' ':' ( 'MAX' | 'BSUM' | 'NSUM' ) ';' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:387:1: accumulation_method : 'ACCU' ':' ( 'MAX' | 'BSUM' | 'NSUM' ) ';' ;
     def accumulation_method(self, ):
 
         try:
             try:
-                # FCL.g:324:21: ( 'ACCU' ':' ( 'MAX' | 'BSUM' | 'NSUM' ) ';' )
-                # FCL.g:324:23: 'ACCU' ':' ( 'MAX' | 'BSUM' | 'NSUM' ) ';'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:387:21: ( 'ACCU' ':' ( 'MAX' | 'BSUM' | 'NSUM' ) ';' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:387:23: 'ACCU' ':' ( 'MAX' | 'BSUM' | 'NSUM' ) ';'
                 pass 
-                self.match(self.input, 51, self.FOLLOW_51_in_accumulation_method1008)
-                self.match(self.input, 18, self.FOLLOW_18_in_accumulation_method1010)
+                self.match(self.input, 51, self.FOLLOW_51_in_accumulation_method1114)
+                self.match(self.input, 18, self.FOLLOW_18_in_accumulation_method1116)
                 if self.input.LA(1) == 47 or self.input.LA(1) == 49 or self.input.LA(1) == 52:
                     self.input.consume()
                     self._state.errorRecovery = False
@@ -1881,12 +2046,13 @@ class FCLParser(Parser):
                     raise mse
 
 
-                self.match(self.input, 20, self.FOLLOW_20_in_accumulation_method1024)
+                self.match(self.input, 20, self.FOLLOW_20_in_accumulation_method1130)
 
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1899,7 +2065,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "condition"
-    # FCL.g:329:1: condition returns [input] : (s1= subcondition ) ( (op= ( AND_ | OR_ ) s2= subcondition ) )* ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:392:1: condition returns [input] : (s1= subcondition ) ( (op= ( AND_ | OR_ ) s2= subcondition ) )* ;
     def condition(self, ):
 
         input = None
@@ -1915,13 +2081,13 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:333:3: ( (s1= subcondition ) ( (op= ( AND_ | OR_ ) s2= subcondition ) )* )
-                # FCL.g:334:3: (s1= subcondition ) ( (op= ( AND_ | OR_ ) s2= subcondition ) )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:396:3: ( (s1= subcondition ) ( (op= ( AND_ | OR_ ) s2= subcondition ) )* )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:397:3: (s1= subcondition ) ( (op= ( AND_ | OR_ ) s2= subcondition ) )*
                 pass 
-                # FCL.g:334:3: (s1= subcondition )
-                # FCL.g:335:5: s1= subcondition
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:397:3: (s1= subcondition )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:398:5: s1= subcondition
                 pass 
-                self._state.following.append(self.FOLLOW_subcondition_in_condition1055)
+                self._state.following.append(self.FOLLOW_subcondition_in_condition1161)
                 s1 = self.subcondition()
 
                 self._state.following.pop()
@@ -1931,20 +2097,20 @@ class FCLParser(Parser):
 
 
 
-                # FCL.g:339:3: ( (op= ( AND_ | OR_ ) s2= subcondition ) )*
-                while True: #loop28
-                    alt28 = 2
-                    LA28_0 = self.input.LA(1)
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:402:3: ( (op= ( AND_ | OR_ ) s2= subcondition ) )*
+                while True: #loop30
+                    alt30 = 2
+                    LA30_0 = self.input.LA(1)
 
-                    if ((OR_ <= LA28_0 <= AND_)) :
-                        alt28 = 1
+                    if ((OR_ <= LA30_0 <= AND_)) :
+                        alt30 = 1
 
 
-                    if alt28 == 1:
-                        # FCL.g:340:5: (op= ( AND_ | OR_ ) s2= subcondition )
+                    if alt30 == 1:
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:403:5: (op= ( AND_ | OR_ ) s2= subcondition )
                         pass 
-                        # FCL.g:340:5: (op= ( AND_ | OR_ ) s2= subcondition )
-                        # FCL.g:341:7: op= ( AND_ | OR_ ) s2= subcondition
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:403:5: (op= ( AND_ | OR_ ) s2= subcondition )
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:404:7: op= ( AND_ | OR_ ) s2= subcondition
                         pass 
                         op = self.input.LT(1)
                         if (OR_ <= self.input.LA(1) <= AND_):
@@ -1964,13 +2130,13 @@ class FCLParser(Parser):
                             op_name = op.text
                               
                         #action end
-                        self._state.following.append(self.FOLLOW_subcondition_in_condition1105)
+                        self._state.following.append(self.FOLLOW_subcondition_in_condition1211)
                         s2 = self.subcondition()
 
                         self._state.following.pop()
                         #action start
                                
-                        input =  fuzzy.operator.Compound.Compound(getOperator(op.text),input,s2)
+                        input =  fuzzy.operator.Compound.Compound(getOperator(op.text), input, s2)
                               
                         #action end
 
@@ -1979,14 +2145,15 @@ class FCLParser(Parser):
 
 
                     else:
-                        break #loop28
+                        break #loop30
 
 
 
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -1999,64 +2166,64 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "subcondition"
-    # FCL.g:359:1: subcondition returns [input] : ( ( 'NOT' '(' condition ')' ) | ( subcondition2 ) );
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:422:1: subcondition returns [input] : ( ( 'NOT' '(' condition ')' ) | ( subcondition2 ) );
     def subcondition(self, ):
 
         input = None
 
-        condition17 = None
+        condition19 = None
 
-        subcondition218 = None
+        subcondition220 = None
 
 
         try:
             try:
-                # FCL.g:360:3: ( ( 'NOT' '(' condition ')' ) | ( subcondition2 ) )
-                alt29 = 2
-                LA29_0 = self.input.LA(1)
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:423:3: ( ( 'NOT' '(' condition ')' ) | ( subcondition2 ) )
+                alt31 = 2
+                LA31_0 = self.input.LA(1)
 
-                if (LA29_0 == 53) :
-                    alt29 = 1
-                elif (LA29_0 == Identifier or LA29_0 == 34) :
-                    alt29 = 2
+                if (LA31_0 == 53) :
+                    alt31 = 1
+                elif (LA31_0 == Identifier or LA31_0 == 34) :
+                    alt31 = 2
                 else:
-                    nvae = NoViableAltException("", 29, 0, self.input)
+                    nvae = NoViableAltException("", 31, 0, self.input)
 
                     raise nvae
 
-                if alt29 == 1:
-                    # FCL.g:360:5: ( 'NOT' '(' condition ')' )
+                if alt31 == 1:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:423:5: ( 'NOT' '(' condition ')' )
                     pass 
-                    # FCL.g:360:5: ( 'NOT' '(' condition ')' )
-                    # FCL.g:360:6: 'NOT' '(' condition ')'
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:423:5: ( 'NOT' '(' condition ')' )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:423:6: 'NOT' '(' condition ')'
                     pass 
-                    self.match(self.input, 53, self.FOLLOW_53_in_subcondition1145)
-                    self.match(self.input, 34, self.FOLLOW_34_in_subcondition1147)
-                    self._state.following.append(self.FOLLOW_condition_in_subcondition1149)
-                    condition17 = self.condition()
+                    self.match(self.input, 53, self.FOLLOW_53_in_subcondition1251)
+                    self.match(self.input, 34, self.FOLLOW_34_in_subcondition1253)
+                    self._state.following.append(self.FOLLOW_condition_in_subcondition1255)
+                    condition19 = self.condition()
 
                     self._state.following.pop()
-                    self.match(self.input, 36, self.FOLLOW_36_in_subcondition1151)
+                    self.match(self.input, 36, self.FOLLOW_36_in_subcondition1257)
                     #action start
-                    input =  fuzzy.operator.Not.Not(condition17)
+                    input =  fuzzy.operator.Not.Not(condition19)
                     #action end
 
 
 
 
 
-                elif alt29 == 2:
-                    # FCL.g:361:5: ( subcondition2 )
+                elif alt31 == 2:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:424:5: ( subcondition2 )
                     pass 
-                    # FCL.g:361:5: ( subcondition2 )
-                    # FCL.g:361:7: subcondition2
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:424:5: ( subcondition2 )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:424:7: subcondition2
                     pass 
-                    self._state.following.append(self.FOLLOW_subcondition2_in_subcondition1163)
-                    subcondition218 = self.subcondition2()
+                    self._state.following.append(self.FOLLOW_subcondition2_in_subcondition1269)
+                    subcondition220 = self.subcondition2()
 
                     self._state.following.pop()
                     #action start
-                    input =  subcondition218
+                    input =  subcondition220
                     #action end
 
 
@@ -2064,7 +2231,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2077,7 +2245,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "subcondition2"
-    # FCL.g:368:1: subcondition2 returns [input] : ( ( '(' c1= condition ')' ) | ( variable_name ( 'IS' (x= 'NOT' )? | '.' ) term_name ) | (norm= operator_name_any '(' c4= condition ',' c5= condition ')' ) );
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:431:1: subcondition2 returns [input] : ( ( '(' c1= condition ')' ) | ( variable_name ( 'IS' (x= 'NOT' )? | '.' ) term_name ) | (norm= operator_name_any '(' c4= condition ',' c5= condition ')' ) );
     def subcondition2(self, ):
 
         input = None
@@ -2091,48 +2259,48 @@ class FCLParser(Parser):
 
         c5 = None
 
-        variable_name19 = None
+        variable_name21 = None
 
-        term_name20 = None
+        term_name22 = None
 
 
         try:
             try:
-                # FCL.g:369:3: ( ( '(' c1= condition ')' ) | ( variable_name ( 'IS' (x= 'NOT' )? | '.' ) term_name ) | (norm= operator_name_any '(' c4= condition ',' c5= condition ')' ) )
-                alt32 = 3
-                LA32_0 = self.input.LA(1)
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:432:3: ( ( '(' c1= condition ')' ) | ( variable_name ( 'IS' (x= 'NOT' )? | '.' ) term_name ) | (norm= operator_name_any '(' c4= condition ',' c5= condition ')' ) )
+                alt34 = 3
+                LA34_0 = self.input.LA(1)
 
-                if (LA32_0 == 34) :
-                    alt32 = 1
-                elif (LA32_0 == Identifier) :
-                    LA32_2 = self.input.LA(2)
+                if (LA34_0 == 34) :
+                    alt34 = 1
+                elif (LA34_0 == Identifier) :
+                    LA34_2 = self.input.LA(2)
 
-                    if (LA32_2 == 34 or LA32_2 == 42) :
-                        alt32 = 3
-                    elif ((54 <= LA32_2 <= 55)) :
-                        alt32 = 2
+                    if (LA34_2 == 34 or LA34_2 == 42) :
+                        alt34 = 3
+                    elif ((54 <= LA34_2 <= 55)) :
+                        alt34 = 2
                     else:
-                        nvae = NoViableAltException("", 32, 2, self.input)
+                        nvae = NoViableAltException("", 34, 2, self.input)
 
                         raise nvae
 
                 else:
-                    nvae = NoViableAltException("", 32, 0, self.input)
+                    nvae = NoViableAltException("", 34, 0, self.input)
 
                     raise nvae
 
-                if alt32 == 1:
-                    # FCL.g:370:3: ( '(' c1= condition ')' )
+                if alt34 == 1:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:433:3: ( '(' c1= condition ')' )
                     pass 
-                    # FCL.g:370:3: ( '(' c1= condition ')' )
-                    # FCL.g:370:4: '(' c1= condition ')'
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:433:3: ( '(' c1= condition ')' )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:433:4: '(' c1= condition ')'
                     pass 
-                    self.match(self.input, 34, self.FOLLOW_34_in_subcondition21190)
-                    self._state.following.append(self.FOLLOW_condition_in_subcondition21194)
+                    self.match(self.input, 34, self.FOLLOW_34_in_subcondition21296)
+                    self._state.following.append(self.FOLLOW_condition_in_subcondition21300)
                     c1 = self.condition()
 
                     self._state.following.pop()
-                    self.match(self.input, 36, self.FOLLOW_36_in_subcondition21196)
+                    self.match(self.input, 36, self.FOLLOW_36_in_subcondition21302)
                     #action start
                          
                     input =  c1
@@ -2143,62 +2311,62 @@ class FCLParser(Parser):
 
 
 
-                elif alt32 == 2:
-                    # FCL.g:376:3: ( variable_name ( 'IS' (x= 'NOT' )? | '.' ) term_name )
+                elif alt34 == 2:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:439:3: ( variable_name ( 'IS' (x= 'NOT' )? | '.' ) term_name )
                     pass 
-                    # FCL.g:376:3: ( variable_name ( 'IS' (x= 'NOT' )? | '.' ) term_name )
-                    # FCL.g:376:5: variable_name ( 'IS' (x= 'NOT' )? | '.' ) term_name
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:439:3: ( variable_name ( 'IS' (x= 'NOT' )? | '.' ) term_name )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:439:5: variable_name ( 'IS' (x= 'NOT' )? | '.' ) term_name
                     pass 
-                    self._state.following.append(self.FOLLOW_variable_name_in_subcondition21216)
-                    variable_name19 = self.variable_name()
+                    self._state.following.append(self.FOLLOW_variable_name_in_subcondition21322)
+                    variable_name21 = self.variable_name()
 
                     self._state.following.pop()
-                    # FCL.g:376:19: ( 'IS' (x= 'NOT' )? | '.' )
-                    alt31 = 2
-                    LA31_0 = self.input.LA(1)
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:439:19: ( 'IS' (x= 'NOT' )? | '.' )
+                    alt33 = 2
+                    LA33_0 = self.input.LA(1)
 
-                    if (LA31_0 == 54) :
-                        alt31 = 1
-                    elif (LA31_0 == 55) :
-                        alt31 = 2
+                    if (LA33_0 == 54) :
+                        alt33 = 1
+                    elif (LA33_0 == 55) :
+                        alt33 = 2
                     else:
-                        nvae = NoViableAltException("", 31, 0, self.input)
+                        nvae = NoViableAltException("", 33, 0, self.input)
 
                         raise nvae
 
-                    if alt31 == 1:
-                        # FCL.g:376:20: 'IS' (x= 'NOT' )?
+                    if alt33 == 1:
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:439:20: 'IS' (x= 'NOT' )?
                         pass 
-                        self.match(self.input, 54, self.FOLLOW_54_in_subcondition21219)
-                        # FCL.g:376:26: (x= 'NOT' )?
-                        alt30 = 2
-                        LA30_0 = self.input.LA(1)
+                        self.match(self.input, 54, self.FOLLOW_54_in_subcondition21325)
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:439:26: (x= 'NOT' )?
+                        alt32 = 2
+                        LA32_0 = self.input.LA(1)
 
-                        if (LA30_0 == 53) :
-                            alt30 = 1
-                        if alt30 == 1:
-                            # FCL.g:376:26: x= 'NOT'
+                        if (LA32_0 == 53) :
+                            alt32 = 1
+                        if alt32 == 1:
+                            # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:439:26: x= 'NOT'
                             pass 
-                            x=self.match(self.input, 53, self.FOLLOW_53_in_subcondition21223)
+                            x=self.match(self.input, 53, self.FOLLOW_53_in_subcondition21329)
 
 
 
 
 
-                    elif alt31 == 2:
-                        # FCL.g:376:36: '.'
+                    elif alt33 == 2:
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:439:36: '.'
                         pass 
-                        self.match(self.input, 55, self.FOLLOW_55_in_subcondition21228)
+                        self.match(self.input, 55, self.FOLLOW_55_in_subcondition21334)
 
 
 
-                    self._state.following.append(self.FOLLOW_term_name_in_subcondition21232)
-                    term_name20 = self.term_name()
+                    self._state.following.append(self.FOLLOW_term_name_in_subcondition21338)
+                    term_name22 = self.term_name()
 
                     self._state.following.pop()
                     #action start
                          
-                    input = fuzzy.operator.Input.Input(self.System.variables[((variable_name19 is not None) and [self.input.toString(variable_name19.start,variable_name19.stop)] or [None])[0]].adjectives[((term_name20 is not None) and [self.input.toString(term_name20.start,term_name20.stop)] or [None])[0]])
+                    input = fuzzy.operator.Input.Input(self.System.variables[((variable_name21 is not None) and [self.input.toString(variable_name21.start,variable_name21.stop)] or [None])[0]].adjectives[((term_name22 is not None) and [self.input.toString(term_name22.start,term_name22.stop)] or [None])[0]])
                     if x is not None:
                         input = fuzzy.operator.Not.Not(input)
                         
@@ -2208,30 +2376,30 @@ class FCLParser(Parser):
 
 
 
-                elif alt32 == 3:
-                    # FCL.g:384:3: (norm= operator_name_any '(' c4= condition ',' c5= condition ')' )
+                elif alt34 == 3:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:447:3: (norm= operator_name_any '(' c4= condition ',' c5= condition ')' )
                     pass 
-                    # FCL.g:384:3: (norm= operator_name_any '(' c4= condition ',' c5= condition ')' )
-                    # FCL.g:384:4: norm= operator_name_any '(' c4= condition ',' c5= condition ')'
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:447:3: (norm= operator_name_any '(' c4= condition ',' c5= condition ')' )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:447:4: norm= operator_name_any '(' c4= condition ',' c5= condition ')'
                     pass 
-                    self._state.following.append(self.FOLLOW_operator_name_any_in_subcondition21254)
+                    self._state.following.append(self.FOLLOW_operator_name_any_in_subcondition21360)
                     norm = self.operator_name_any()
 
                     self._state.following.pop()
-                    self.match(self.input, 34, self.FOLLOW_34_in_subcondition21256)
-                    self._state.following.append(self.FOLLOW_condition_in_subcondition21260)
+                    self.match(self.input, 34, self.FOLLOW_34_in_subcondition21362)
+                    self._state.following.append(self.FOLLOW_condition_in_subcondition21366)
                     c4 = self.condition()
 
                     self._state.following.pop()
-                    self.match(self.input, 35, self.FOLLOW_35_in_subcondition21262)
-                    self._state.following.append(self.FOLLOW_condition_in_subcondition21266)
+                    self.match(self.input, 35, self.FOLLOW_35_in_subcondition21368)
+                    self._state.following.append(self.FOLLOW_condition_in_subcondition21372)
                     c5 = self.condition()
 
                     self._state.following.pop()
-                    self.match(self.input, 36, self.FOLLOW_36_in_subcondition21268)
+                    self.match(self.input, 36, self.FOLLOW_36_in_subcondition21374)
                     #action start
                          
-                    input =  fuzzy.operator.Compound.Compound(norm,c4,c5)
+                    input =  fuzzy.operator.Compound.Compound(norm, c4, c5)
                         
                     #action end
 
@@ -2240,7 +2408,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2253,7 +2422,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "conclusion"
-    # FCL.g:393:1: conclusion returns [adjs] : ( (c1= conclusion2 ) ( ',' c2= conclusion2 )* ) ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:456:1: conclusion returns [adjs] : ( (c1= conclusion2 ) ( ',' c2= conclusion2 )* ) ;
     def conclusion(self, ):
 
         adjs = None
@@ -2268,16 +2437,16 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:397:3: ( ( (c1= conclusion2 ) ( ',' c2= conclusion2 )* ) )
-                # FCL.g:397:5: ( (c1= conclusion2 ) ( ',' c2= conclusion2 )* )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:460:3: ( ( (c1= conclusion2 ) ( ',' c2= conclusion2 )* ) )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:460:5: ( (c1= conclusion2 ) ( ',' c2= conclusion2 )* )
                 pass 
-                # FCL.g:397:5: ( (c1= conclusion2 ) ( ',' c2= conclusion2 )* )
-                # FCL.g:398:5: (c1= conclusion2 ) ( ',' c2= conclusion2 )*
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:460:5: ( (c1= conclusion2 ) ( ',' c2= conclusion2 )* )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:461:5: (c1= conclusion2 ) ( ',' c2= conclusion2 )*
                 pass 
-                # FCL.g:398:5: (c1= conclusion2 )
-                # FCL.g:398:11: c1= conclusion2
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:461:5: (c1= conclusion2 )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:461:11: c1= conclusion2
                 pass 
-                self._state.following.append(self.FOLLOW_conclusion2_in_conclusion1316)
+                self._state.following.append(self.FOLLOW_conclusion2_in_conclusion1422)
                 c1 = self.conclusion2()
 
                 self._state.following.pop()
@@ -2287,20 +2456,20 @@ class FCLParser(Parser):
 
 
 
-                # FCL.g:399:5: ( ',' c2= conclusion2 )*
-                while True: #loop33
-                    alt33 = 2
-                    LA33_0 = self.input.LA(1)
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:462:5: ( ',' c2= conclusion2 )*
+                while True: #loop35
+                    alt35 = 2
+                    LA35_0 = self.input.LA(1)
 
-                    if (LA33_0 == 35) :
-                        alt33 = 1
+                    if (LA35_0 == 35) :
+                        alt35 = 1
 
 
-                    if alt33 == 1:
-                        # FCL.g:399:8: ',' c2= conclusion2
+                    if alt35 == 1:
+                        # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:462:8: ',' c2= conclusion2
                         pass 
-                        self.match(self.input, 35, self.FOLLOW_35_in_conclusion1330)
-                        self._state.following.append(self.FOLLOW_conclusion2_in_conclusion1334)
+                        self.match(self.input, 35, self.FOLLOW_35_in_conclusion1436)
+                        self._state.following.append(self.FOLLOW_conclusion2_in_conclusion1440)
                         c2 = self.conclusion2()
 
                         self._state.following.pop()
@@ -2310,7 +2479,7 @@ class FCLParser(Parser):
 
 
                     else:
-                        break #loop33
+                        break #loop35
 
 
 
@@ -2323,7 +2492,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2336,7 +2506,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "conclusion2"
-    # FCL.g:403:1: conclusion2 returns [adj] : ( ( '(' c2= conclusion3 ')' ) | (c1= conclusion3 ) );
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:466:1: conclusion2 returns [adj] : ( ( '(' c2= conclusion3 ')' ) | (c1= conclusion3 ) );
     def conclusion2(self, ):
 
         adj = None
@@ -2348,31 +2518,31 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:404:3: ( ( '(' c2= conclusion3 ')' ) | (c1= conclusion3 ) )
-                alt34 = 2
-                LA34_0 = self.input.LA(1)
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:467:3: ( ( '(' c2= conclusion3 ')' ) | (c1= conclusion3 ) )
+                alt36 = 2
+                LA36_0 = self.input.LA(1)
 
-                if (LA34_0 == 34) :
-                    alt34 = 1
-                elif (LA34_0 == Identifier) :
-                    alt34 = 2
+                if (LA36_0 == 34) :
+                    alt36 = 1
+                elif (LA36_0 == Identifier) :
+                    alt36 = 2
                 else:
-                    nvae = NoViableAltException("", 34, 0, self.input)
+                    nvae = NoViableAltException("", 36, 0, self.input)
 
                     raise nvae
 
-                if alt34 == 1:
-                    # FCL.g:405:3: ( '(' c2= conclusion3 ')' )
+                if alt36 == 1:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:468:3: ( '(' c2= conclusion3 ')' )
                     pass 
-                    # FCL.g:405:3: ( '(' c2= conclusion3 ')' )
-                    # FCL.g:405:5: '(' c2= conclusion3 ')'
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:468:3: ( '(' c2= conclusion3 ')' )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:468:5: '(' c2= conclusion3 ')'
                     pass 
-                    self.match(self.input, 34, self.FOLLOW_34_in_conclusion21368)
-                    self._state.following.append(self.FOLLOW_conclusion3_in_conclusion21372)
+                    self.match(self.input, 34, self.FOLLOW_34_in_conclusion21474)
+                    self._state.following.append(self.FOLLOW_conclusion3_in_conclusion21478)
                     c2 = self.conclusion3()
 
                     self._state.following.pop()
-                    self.match(self.input, 36, self.FOLLOW_36_in_conclusion21375)
+                    self.match(self.input, 36, self.FOLLOW_36_in_conclusion21481)
                     #action start
                     adj = c2
                     #action end
@@ -2381,13 +2551,13 @@ class FCLParser(Parser):
 
 
 
-                elif alt34 == 2:
-                    # FCL.g:407:3: (c1= conclusion3 )
+                elif alt36 == 2:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:470:3: (c1= conclusion3 )
                     pass 
-                    # FCL.g:407:3: (c1= conclusion3 )
-                    # FCL.g:407:9: c1= conclusion3
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:470:3: (c1= conclusion3 )
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:470:9: c1= conclusion3
                     pass 
-                    self._state.following.append(self.FOLLOW_conclusion3_in_conclusion21395)
+                    self._state.following.append(self.FOLLOW_conclusion3_in_conclusion21501)
                     c1 = self.conclusion3()
 
                     self._state.following.pop()
@@ -2400,7 +2570,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2413,7 +2584,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "conclusion3"
-    # FCL.g:410:1: conclusion3 returns [adj] : ( (v2= variable_name 'IS' t2= term_name ) ) ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:473:1: conclusion3 returns [adj] : ( (v2= variable_name 'IS' t2= term_name ) ) ;
     def conclusion3(self, ):
 
         adj = None
@@ -2425,21 +2596,21 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:411:3: ( ( (v2= variable_name 'IS' t2= term_name ) ) )
-                # FCL.g:412:3: ( (v2= variable_name 'IS' t2= term_name ) )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:474:3: ( ( (v2= variable_name 'IS' t2= term_name ) ) )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:475:3: ( (v2= variable_name 'IS' t2= term_name ) )
                 pass 
-                # FCL.g:412:3: ( (v2= variable_name 'IS' t2= term_name ) )
-                # FCL.g:415:3: (v2= variable_name 'IS' t2= term_name )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:475:3: ( (v2= variable_name 'IS' t2= term_name ) )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:478:3: (v2= variable_name 'IS' t2= term_name )
                 pass 
-                # FCL.g:415:3: (v2= variable_name 'IS' t2= term_name )
-                # FCL.g:415:4: v2= variable_name 'IS' t2= term_name
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:478:3: (v2= variable_name 'IS' t2= term_name )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:478:4: v2= variable_name 'IS' t2= term_name
                 pass 
-                self._state.following.append(self.FOLLOW_variable_name_in_conclusion31432)
+                self._state.following.append(self.FOLLOW_variable_name_in_conclusion31538)
                 v2 = self.variable_name()
 
                 self._state.following.pop()
-                self.match(self.input, 54, self.FOLLOW_54_in_conclusion31434)
-                self._state.following.append(self.FOLLOW_term_name_in_conclusion31438)
+                self.match(self.input, 54, self.FOLLOW_54_in_conclusion31540)
+                self._state.following.append(self.FOLLOW_term_name_in_conclusion31544)
                 t2 = self.term_name()
 
                 self._state.following.pop()
@@ -2456,7 +2627,8 @@ class FCLParser(Parser):
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2469,15 +2641,15 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "rule"
-    # FCL.g:419:1: rule[block_name] : 'RULE' Integer_literal ':' 'IF' condition 'THEN' conclusion ( 'WITH' weighting_factor )? ';' ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:482:1: rule[block_name] : 'RULE' Integer_literal ':' 'IF' condition 'THEN' conclusion ( 'WITH' weighting_factor )? ';' ;
     def rule(self, block_name):
 
-        Integer_literal24 = None
-        weighting_factor21 = None
+        Integer_literal26 = None
+        weighting_factor23 = None
 
-        condition22 = None
+        condition24 = None
 
-        conclusion23 = None
+        conclusion25 = None
 
 
               
@@ -2485,55 +2657,56 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:422:3: ( 'RULE' Integer_literal ':' 'IF' condition 'THEN' conclusion ( 'WITH' weighting_factor )? ';' )
-                # FCL.g:422:5: 'RULE' Integer_literal ':' 'IF' condition 'THEN' conclusion ( 'WITH' weighting_factor )? ';'
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:485:3: ( 'RULE' Integer_literal ':' 'IF' condition 'THEN' conclusion ( 'WITH' weighting_factor )? ';' )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:485:5: 'RULE' Integer_literal ':' 'IF' condition 'THEN' conclusion ( 'WITH' weighting_factor )? ';'
                 pass 
-                self.match(self.input, 56, self.FOLLOW_56_in_rule1462)
-                Integer_literal24=self.match(self.input, Integer_literal, self.FOLLOW_Integer_literal_in_rule1464)
-                self.match(self.input, 18, self.FOLLOW_18_in_rule1466)
-                self.match(self.input, 57, self.FOLLOW_57_in_rule1468)
-                self._state.following.append(self.FOLLOW_condition_in_rule1470)
-                condition22 = self.condition()
+                self.match(self.input, 56, self.FOLLOW_56_in_rule1568)
+                Integer_literal26=self.match(self.input, Integer_literal, self.FOLLOW_Integer_literal_in_rule1570)
+                self.match(self.input, 18, self.FOLLOW_18_in_rule1572)
+                self.match(self.input, 57, self.FOLLOW_57_in_rule1574)
+                self._state.following.append(self.FOLLOW_condition_in_rule1576)
+                condition24 = self.condition()
 
                 self._state.following.pop()
-                self.match(self.input, 58, self.FOLLOW_58_in_rule1472)
-                self._state.following.append(self.FOLLOW_conclusion_in_rule1474)
-                conclusion23 = self.conclusion()
+                self.match(self.input, 58, self.FOLLOW_58_in_rule1578)
+                self._state.following.append(self.FOLLOW_conclusion_in_rule1580)
+                conclusion25 = self.conclusion()
 
                 self._state.following.pop()
-                # FCL.g:422:65: ( 'WITH' weighting_factor )?
-                alt35 = 2
-                LA35_0 = self.input.LA(1)
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:485:65: ( 'WITH' weighting_factor )?
+                alt37 = 2
+                LA37_0 = self.input.LA(1)
 
-                if (LA35_0 == 59) :
-                    alt35 = 1
-                if alt35 == 1:
-                    # FCL.g:422:66: 'WITH' weighting_factor
+                if (LA37_0 == 59) :
+                    alt37 = 1
+                if alt37 == 1:
+                    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:485:66: 'WITH' weighting_factor
                     pass 
-                    self.match(self.input, 59, self.FOLLOW_59_in_rule1477)
-                    self._state.following.append(self.FOLLOW_weighting_factor_in_rule1479)
-                    weighting_factor21 = self.weighting_factor()
+                    self.match(self.input, 59, self.FOLLOW_59_in_rule1583)
+                    self._state.following.append(self.FOLLOW_weighting_factor_in_rule1585)
+                    weighting_factor23 = self.weighting_factor()
 
                     self._state.following.pop()
                     #action start
-                    certainty = float(((weighting_factor21 is not None) and [self.input.toString(weighting_factor21.start,weighting_factor21.stop)] or [None])[0]);
+                    certainty = float(((weighting_factor23 is not None) and [self.input.toString(weighting_factor23.start,weighting_factor23.stop)] or [None])[0]);
                     #action end
 
 
 
-                self.match(self.input, 20, self.FOLLOW_20_in_rule1485)
+                self.match(self.input, 20, self.FOLLOW_20_in_rule1591)
                 #action start
                  
-                input = condition22
-                adjective = conclusion23
-                self.System.rules[block_name+'.'+Integer_literal24.text] = fuzzy.Rule.Rule(adjective,input,certainty=certainty)
+                input = condition24
+                adjective = conclusion25
+                self.System.rules[block_name+'.'+Integer_literal26.text] = fuzzy.Rule.Rule(adjective, input, certainty=certainty)
 
                 #action end
 
 
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2553,7 +2726,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "weighting_factor"
-    # FCL.g:430:1: weighting_factor : numeric_literal ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:493:1: weighting_factor : numeric_literal ;
     def weighting_factor(self, ):
 
         retval = self.weighting_factor_return()
@@ -2561,10 +2734,10 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:430:18: ( numeric_literal )
-                # FCL.g:433:3: numeric_literal
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:493:18: ( numeric_literal )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:496:3: numeric_literal
                 pass 
-                self._state.following.append(self.FOLLOW_numeric_literal_in_weighting_factor1500)
+                self._state.following.append(self.FOLLOW_numeric_literal_in_weighting_factor1606)
                 self.numeric_literal()
 
                 self._state.following.pop()
@@ -2574,7 +2747,8 @@ class FCLParser(Parser):
                 retval.stop = self.input.LT(-1)
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2594,7 +2768,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "function_block_name"
-    # FCL.g:436:1: function_block_name : Identifier ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:499:1: function_block_name : Identifier ;
     def function_block_name(self, ):
 
         retval = self.function_block_name_return()
@@ -2602,17 +2776,18 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:436:21: ( Identifier )
-                # FCL.g:436:23: Identifier
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:499:21: ( Identifier )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:499:23: Identifier
                 pass 
-                self.match(self.input, Identifier, self.FOLLOW_Identifier_in_function_block_name1511)
+                self.match(self.input, Identifier, self.FOLLOW_Identifier_in_function_block_name1617)
 
 
 
                 retval.stop = self.input.LT(-1)
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2632,7 +2807,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "rule_block_name"
-    # FCL.g:438:1: rule_block_name : Identifier ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:501:1: rule_block_name : Identifier ;
     def rule_block_name(self, ):
 
         retval = self.rule_block_name_return()
@@ -2640,17 +2815,18 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:438:17: ( Identifier )
-                # FCL.g:438:19: Identifier
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:501:17: ( Identifier )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:501:19: Identifier
                 pass 
-                self.match(self.input, Identifier, self.FOLLOW_Identifier_in_rule_block_name1519)
+                self.match(self.input, Identifier, self.FOLLOW_Identifier_in_rule_block_name1625)
 
 
 
                 retval.stop = self.input.LT(-1)
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2670,7 +2846,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "term_name"
-    # FCL.g:439:1: term_name : Identifier ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:502:1: term_name : Identifier ;
     def term_name(self, ):
 
         retval = self.term_name_return()
@@ -2678,17 +2854,18 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:439:11: ( Identifier )
-                # FCL.g:439:13: Identifier
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:502:11: ( Identifier )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:502:13: Identifier
                 pass 
-                self.match(self.input, Identifier, self.FOLLOW_Identifier_in_term_name1527)
+                self.match(self.input, Identifier, self.FOLLOW_Identifier_in_term_name1633)
 
 
 
                 retval.stop = self.input.LT(-1)
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2708,7 +2885,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "f_variable_name"
-    # FCL.g:440:1: f_variable_name : Identifier ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:503:1: f_variable_name : Identifier ;
     def f_variable_name(self, ):
 
         retval = self.f_variable_name_return()
@@ -2716,17 +2893,18 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:440:17: ( Identifier )
-                # FCL.g:440:19: Identifier
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:503:17: ( Identifier )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:503:19: Identifier
                 pass 
-                self.match(self.input, Identifier, self.FOLLOW_Identifier_in_f_variable_name1535)
+                self.match(self.input, Identifier, self.FOLLOW_Identifier_in_f_variable_name1641)
 
 
 
                 retval.stop = self.input.LT(-1)
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2746,7 +2924,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "variable_name"
-    # FCL.g:441:1: variable_name : Identifier ;
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:504:1: variable_name : Identifier ;
     def variable_name(self, ):
 
         retval = self.variable_name_return()
@@ -2754,17 +2932,18 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:441:15: ( Identifier )
-                # FCL.g:441:17: Identifier
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:504:15: ( Identifier )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:504:17: Identifier
                 pass 
-                self.match(self.input, Identifier, self.FOLLOW_Identifier_in_variable_name1543)
+                self.match(self.input, Identifier, self.FOLLOW_Identifier_in_variable_name1649)
 
 
 
                 retval.stop = self.input.LT(-1)
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2784,7 +2963,7 @@ class FCLParser(Parser):
 
 
     # $ANTLR start "numeric_literal"
-    # FCL.g:442:1: numeric_literal : ( Integer_literal | Real_literal );
+    # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:505:1: numeric_literal : ( Integer_literal | Real_literal );
     def numeric_literal(self, ):
 
         retval = self.numeric_literal_return()
@@ -2792,8 +2971,8 @@ class FCLParser(Parser):
 
         try:
             try:
-                # FCL.g:442:17: ( Integer_literal | Real_literal )
-                # FCL.g:
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:505:17: ( Integer_literal | Real_literal )
+                # /work/projects/pyfuzzy/pyfuzzy/fuzzy/storage/fcl/FCL.g:
                 pass 
                 if (Integer_literal <= self.input.LA(1) <= Real_literal):
                     self.input.consume()
@@ -2810,7 +2989,8 @@ class FCLParser(Parser):
                 retval.stop = self.input.LT(-1)
 
 
-            except RecognitionException, re:
+            except RecognitionException:
+                re = sys.exc_info()[1]
                 self.reportError(re)
                 self.recover(self.input, re)
         finally:
@@ -2888,106 +3068,113 @@ class FCLParser(Parser):
     FOLLOW_20_in_linguistic_term504 = frozenset([1])
     FOLLOW_singleton_in_membership_function526 = frozenset([1])
     FOLLOW_points_in_membership_function538 = frozenset([1])
-    FOLLOW_numeric_literal_in_singleton561 = frozenset([1])
-    FOLLOW_variable_name_in_singleton573 = frozenset([1])
-    FOLLOW_34_in_points605 = frozenset([4, 8, 9])
-    FOLLOW_numeric_literal_in_points615 = frozenset([35])
-    FOLLOW_variable_name_in_points619 = frozenset([35])
-    FOLLOW_35_in_points627 = frozenset([8, 9])
-    FOLLOW_numeric_literal_in_points636 = frozenset([36])
-    FOLLOW_36_in_points643 = frozenset([1, 34])
-    FOLLOW_37_in_defuzzification_method679 = frozenset([18])
-    FOLLOW_18_in_defuzzification_method681 = frozenset([4])
-    FOLLOW_Identifier_in_defuzzification_method685 = frozenset([20])
-    FOLLOW_20_in_defuzzification_method691 = frozenset([1])
-    FOLLOW_38_in_default_value706 = frozenset([33])
-    FOLLOW_33_in_default_value708 = frozenset([8, 9, 39])
-    FOLLOW_numeric_literal_in_default_value718 = frozenset([20])
-    FOLLOW_39_in_default_value730 = frozenset([20])
-    FOLLOW_20_in_default_value740 = frozenset([1])
-    FOLLOW_40_in_range751 = frozenset([33])
-    FOLLOW_33_in_range753 = frozenset([34])
-    FOLLOW_34_in_range755 = frozenset([8, 9])
-    FOLLOW_numeric_literal_in_range757 = frozenset([41])
-    FOLLOW_41_in_range759 = frozenset([8, 9])
-    FOLLOW_numeric_literal_in_range761 = frozenset([36])
-    FOLLOW_36_in_range763 = frozenset([20])
-    FOLLOW_20_in_range765 = frozenset([1])
-    FOLLOW_Identifier_in_operator_name_any784 = frozenset([1, 42])
-    FOLLOW_42_in_operator_name_any787 = frozenset([8, 9])
-    FOLLOW_numeric_literal_in_operator_name_any791 = frozenset([43])
-    FOLLOW_43_in_operator_name_any793 = frozenset([1])
-    FOLLOW_44_in_operator_name_AND816 = frozenset([1])
-    FOLLOW_45_in_operator_name_AND826 = frozenset([1])
-    FOLLOW_46_in_operator_name_AND836 = frozenset([1])
-    FOLLOW_operator_name_any_in_operator_name_AND849 = frozenset([1])
-    FOLLOW_47_in_operator_name_OR870 = frozenset([1])
-    FOLLOW_48_in_operator_name_OR880 = frozenset([1])
-    FOLLOW_49_in_operator_name_OR890 = frozenset([1])
-    FOLLOW_operator_name_any_in_operator_name_OR903 = frozenset([1])
-    FOLLOW_OR__in_operator_definition947 = frozenset([18])
-    FOLLOW_18_in_operator_definition949 = frozenset([4, 47, 48, 49])
-    FOLLOW_operator_name_OR_in_operator_definition953 = frozenset([20])
-    FOLLOW_AND__in_operator_definition964 = frozenset([18])
-    FOLLOW_18_in_operator_definition966 = frozenset([4, 44, 45, 46, 47, 48, 49])
-    FOLLOW_operator_name_AND_in_operator_definition970 = frozenset([20])
-    FOLLOW_20_in_operator_definition979 = frozenset([1])
-    FOLLOW_50_in_activation_method988 = frozenset([18])
-    FOLLOW_18_in_activation_method990 = frozenset([44, 45])
-    FOLLOW_set_in_activation_method992 = frozenset([20])
-    FOLLOW_20_in_activation_method1000 = frozenset([1])
-    FOLLOW_51_in_accumulation_method1008 = frozenset([18])
-    FOLLOW_18_in_accumulation_method1010 = frozenset([47, 49, 52])
-    FOLLOW_set_in_accumulation_method1012 = frozenset([20])
-    FOLLOW_20_in_accumulation_method1024 = frozenset([1])
-    FOLLOW_subcondition_in_condition1055 = frozenset([1, 6, 7])
-    FOLLOW_set_in_condition1083 = frozenset([4, 34, 47, 48, 49, 53])
-    FOLLOW_subcondition_in_condition1105 = frozenset([1, 6, 7])
-    FOLLOW_53_in_subcondition1145 = frozenset([34])
-    FOLLOW_34_in_subcondition1147 = frozenset([4, 34, 47, 48, 49, 53])
-    FOLLOW_condition_in_subcondition1149 = frozenset([36])
-    FOLLOW_36_in_subcondition1151 = frozenset([1])
-    FOLLOW_subcondition2_in_subcondition1163 = frozenset([1])
-    FOLLOW_34_in_subcondition21190 = frozenset([4, 34, 47, 48, 49, 53])
-    FOLLOW_condition_in_subcondition21194 = frozenset([36])
-    FOLLOW_36_in_subcondition21196 = frozenset([1])
-    FOLLOW_variable_name_in_subcondition21216 = frozenset([54, 55])
-    FOLLOW_54_in_subcondition21219 = frozenset([4, 53])
-    FOLLOW_53_in_subcondition21223 = frozenset([4])
-    FOLLOW_55_in_subcondition21228 = frozenset([4])
-    FOLLOW_term_name_in_subcondition21232 = frozenset([1])
-    FOLLOW_operator_name_any_in_subcondition21254 = frozenset([34])
-    FOLLOW_34_in_subcondition21256 = frozenset([4, 34, 47, 48, 49, 53])
-    FOLLOW_condition_in_subcondition21260 = frozenset([35])
-    FOLLOW_35_in_subcondition21262 = frozenset([4, 34, 47, 48, 49, 53])
-    FOLLOW_condition_in_subcondition21266 = frozenset([36])
-    FOLLOW_36_in_subcondition21268 = frozenset([1])
-    FOLLOW_conclusion2_in_conclusion1316 = frozenset([1, 35])
-    FOLLOW_35_in_conclusion1330 = frozenset([4, 34])
-    FOLLOW_conclusion2_in_conclusion1334 = frozenset([1, 35])
-    FOLLOW_34_in_conclusion21368 = frozenset([4, 34])
-    FOLLOW_conclusion3_in_conclusion21372 = frozenset([36])
-    FOLLOW_36_in_conclusion21375 = frozenset([1])
-    FOLLOW_conclusion3_in_conclusion21395 = frozenset([1])
-    FOLLOW_variable_name_in_conclusion31432 = frozenset([54])
-    FOLLOW_54_in_conclusion31434 = frozenset([4])
-    FOLLOW_term_name_in_conclusion31438 = frozenset([1])
-    FOLLOW_56_in_rule1462 = frozenset([8])
-    FOLLOW_Integer_literal_in_rule1464 = frozenset([18])
-    FOLLOW_18_in_rule1466 = frozenset([57])
-    FOLLOW_57_in_rule1468 = frozenset([4, 34, 47, 48, 49, 53])
-    FOLLOW_condition_in_rule1470 = frozenset([58])
-    FOLLOW_58_in_rule1472 = frozenset([4, 34])
-    FOLLOW_conclusion_in_rule1474 = frozenset([20, 59])
-    FOLLOW_59_in_rule1477 = frozenset([8, 9])
-    FOLLOW_weighting_factor_in_rule1479 = frozenset([20])
-    FOLLOW_20_in_rule1485 = frozenset([1])
-    FOLLOW_numeric_literal_in_weighting_factor1500 = frozenset([1])
-    FOLLOW_Identifier_in_function_block_name1511 = frozenset([1])
-    FOLLOW_Identifier_in_rule_block_name1519 = frozenset([1])
-    FOLLOW_Identifier_in_term_name1527 = frozenset([1])
-    FOLLOW_Identifier_in_f_variable_name1535 = frozenset([1])
-    FOLLOW_Identifier_in_variable_name1543 = frozenset([1])
+    FOLLOW_pyfuzzy_set_in_membership_function550 = frozenset([1])
+    FOLLOW_numeric_literal_in_singleton573 = frozenset([1])
+    FOLLOW_variable_name_in_singleton585 = frozenset([1])
+    FOLLOW_34_in_points617 = frozenset([4, 8, 9])
+    FOLLOW_numeric_literal_in_points627 = frozenset([35])
+    FOLLOW_variable_name_in_points631 = frozenset([35])
+    FOLLOW_35_in_points639 = frozenset([8, 9])
+    FOLLOW_numeric_literal_in_points648 = frozenset([36])
+    FOLLOW_36_in_points655 = frozenset([1, 34])
+    FOLLOW_Identifier_in_pyfuzzy_set699 = frozenset([34])
+    FOLLOW_34_in_pyfuzzy_set704 = frozenset([8, 9, 36])
+    FOLLOW_numeric_literal_in_pyfuzzy_set716 = frozenset([35, 36])
+    FOLLOW_35_in_pyfuzzy_set732 = frozenset([8, 9])
+    FOLLOW_numeric_literal_in_pyfuzzy_set742 = frozenset([35, 36])
+    FOLLOW_36_in_pyfuzzy_set762 = frozenset([1])
+    FOLLOW_37_in_defuzzification_method785 = frozenset([18])
+    FOLLOW_18_in_defuzzification_method787 = frozenset([4])
+    FOLLOW_Identifier_in_defuzzification_method791 = frozenset([20])
+    FOLLOW_20_in_defuzzification_method797 = frozenset([1])
+    FOLLOW_38_in_default_value812 = frozenset([33])
+    FOLLOW_33_in_default_value814 = frozenset([8, 9, 39])
+    FOLLOW_numeric_literal_in_default_value824 = frozenset([20])
+    FOLLOW_39_in_default_value836 = frozenset([20])
+    FOLLOW_20_in_default_value846 = frozenset([1])
+    FOLLOW_40_in_range857 = frozenset([33])
+    FOLLOW_33_in_range859 = frozenset([34])
+    FOLLOW_34_in_range861 = frozenset([8, 9])
+    FOLLOW_numeric_literal_in_range863 = frozenset([41])
+    FOLLOW_41_in_range865 = frozenset([8, 9])
+    FOLLOW_numeric_literal_in_range867 = frozenset([36])
+    FOLLOW_36_in_range869 = frozenset([20])
+    FOLLOW_20_in_range871 = frozenset([1])
+    FOLLOW_Identifier_in_operator_name_any890 = frozenset([1, 42])
+    FOLLOW_42_in_operator_name_any893 = frozenset([8, 9])
+    FOLLOW_numeric_literal_in_operator_name_any897 = frozenset([43])
+    FOLLOW_43_in_operator_name_any899 = frozenset([1])
+    FOLLOW_44_in_operator_name_AND922 = frozenset([1])
+    FOLLOW_45_in_operator_name_AND932 = frozenset([1])
+    FOLLOW_46_in_operator_name_AND942 = frozenset([1])
+    FOLLOW_operator_name_any_in_operator_name_AND955 = frozenset([1])
+    FOLLOW_47_in_operator_name_OR976 = frozenset([1])
+    FOLLOW_48_in_operator_name_OR986 = frozenset([1])
+    FOLLOW_49_in_operator_name_OR996 = frozenset([1])
+    FOLLOW_operator_name_any_in_operator_name_OR1009 = frozenset([1])
+    FOLLOW_OR__in_operator_definition1053 = frozenset([18])
+    FOLLOW_18_in_operator_definition1055 = frozenset([4, 47, 48, 49])
+    FOLLOW_operator_name_OR_in_operator_definition1059 = frozenset([20])
+    FOLLOW_AND__in_operator_definition1070 = frozenset([18])
+    FOLLOW_18_in_operator_definition1072 = frozenset([4, 44, 45, 46, 47, 48, 49])
+    FOLLOW_operator_name_AND_in_operator_definition1076 = frozenset([20])
+    FOLLOW_20_in_operator_definition1085 = frozenset([1])
+    FOLLOW_50_in_activation_method1094 = frozenset([18])
+    FOLLOW_18_in_activation_method1096 = frozenset([44, 45])
+    FOLLOW_set_in_activation_method1098 = frozenset([20])
+    FOLLOW_20_in_activation_method1106 = frozenset([1])
+    FOLLOW_51_in_accumulation_method1114 = frozenset([18])
+    FOLLOW_18_in_accumulation_method1116 = frozenset([47, 49, 52])
+    FOLLOW_set_in_accumulation_method1118 = frozenset([20])
+    FOLLOW_20_in_accumulation_method1130 = frozenset([1])
+    FOLLOW_subcondition_in_condition1161 = frozenset([1, 6, 7])
+    FOLLOW_set_in_condition1189 = frozenset([4, 34, 47, 48, 49, 53])
+    FOLLOW_subcondition_in_condition1211 = frozenset([1, 6, 7])
+    FOLLOW_53_in_subcondition1251 = frozenset([34])
+    FOLLOW_34_in_subcondition1253 = frozenset([4, 34, 47, 48, 49, 53])
+    FOLLOW_condition_in_subcondition1255 = frozenset([36])
+    FOLLOW_36_in_subcondition1257 = frozenset([1])
+    FOLLOW_subcondition2_in_subcondition1269 = frozenset([1])
+    FOLLOW_34_in_subcondition21296 = frozenset([4, 34, 47, 48, 49, 53])
+    FOLLOW_condition_in_subcondition21300 = frozenset([36])
+    FOLLOW_36_in_subcondition21302 = frozenset([1])
+    FOLLOW_variable_name_in_subcondition21322 = frozenset([54, 55])
+    FOLLOW_54_in_subcondition21325 = frozenset([4, 53])
+    FOLLOW_53_in_subcondition21329 = frozenset([4])
+    FOLLOW_55_in_subcondition21334 = frozenset([4])
+    FOLLOW_term_name_in_subcondition21338 = frozenset([1])
+    FOLLOW_operator_name_any_in_subcondition21360 = frozenset([34])
+    FOLLOW_34_in_subcondition21362 = frozenset([4, 34, 47, 48, 49, 53])
+    FOLLOW_condition_in_subcondition21366 = frozenset([35])
+    FOLLOW_35_in_subcondition21368 = frozenset([4, 34, 47, 48, 49, 53])
+    FOLLOW_condition_in_subcondition21372 = frozenset([36])
+    FOLLOW_36_in_subcondition21374 = frozenset([1])
+    FOLLOW_conclusion2_in_conclusion1422 = frozenset([1, 35])
+    FOLLOW_35_in_conclusion1436 = frozenset([4, 34])
+    FOLLOW_conclusion2_in_conclusion1440 = frozenset([1, 35])
+    FOLLOW_34_in_conclusion21474 = frozenset([4, 34])
+    FOLLOW_conclusion3_in_conclusion21478 = frozenset([36])
+    FOLLOW_36_in_conclusion21481 = frozenset([1])
+    FOLLOW_conclusion3_in_conclusion21501 = frozenset([1])
+    FOLLOW_variable_name_in_conclusion31538 = frozenset([54])
+    FOLLOW_54_in_conclusion31540 = frozenset([4])
+    FOLLOW_term_name_in_conclusion31544 = frozenset([1])
+    FOLLOW_56_in_rule1568 = frozenset([8])
+    FOLLOW_Integer_literal_in_rule1570 = frozenset([18])
+    FOLLOW_18_in_rule1572 = frozenset([57])
+    FOLLOW_57_in_rule1574 = frozenset([4, 34, 47, 48, 49, 53])
+    FOLLOW_condition_in_rule1576 = frozenset([58])
+    FOLLOW_58_in_rule1578 = frozenset([4, 34])
+    FOLLOW_conclusion_in_rule1580 = frozenset([20, 59])
+    FOLLOW_59_in_rule1583 = frozenset([8, 9])
+    FOLLOW_weighting_factor_in_rule1585 = frozenset([20])
+    FOLLOW_20_in_rule1591 = frozenset([1])
+    FOLLOW_numeric_literal_in_weighting_factor1606 = frozenset([1])
+    FOLLOW_Identifier_in_function_block_name1617 = frozenset([1])
+    FOLLOW_Identifier_in_rule_block_name1625 = frozenset([1])
+    FOLLOW_Identifier_in_term_name1633 = frozenset([1])
+    FOLLOW_Identifier_in_f_variable_name1641 = frozenset([1])
+    FOLLOW_Identifier_in_variable_name1649 = frozenset([1])
     FOLLOW_set_in_numeric_literal0 = frozenset([1])
 
 
