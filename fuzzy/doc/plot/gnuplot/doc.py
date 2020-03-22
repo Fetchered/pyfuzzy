@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,28 +9,28 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 """Plotting of variables, adjectives, ... using gnuplot"""
 
-__revision__ = "$Id: doc.py,v 1.9 2009/09/24 20:32:20 rliebscher Exp $"
+__revision__ = "$Id: doc.py,v 1.15 2010-10-29 19:24:41 rliebscher Exp $"
 
+import sys
+import Gnuplot
+import Gnuplot.funcutils
 
 def getMinMax(set):
     """get tuple with minimum and maximum x-values used by the set."""
-    ig = set.getIntervalGenerator()
-
-    next = ig.nextInterval(None,None)
-    
-    x_min = next
+    x_min = None
     x_max = None
-    
-    while next is not None:
-        x_max = next
-        next = ig.nextInterval(next,None)
+    for x in  set.getValuesX():
+        if x_min is None:
+            x_min = x
+        x_max = x
 
     return (x_min,x_max)
 
@@ -86,9 +86,9 @@ class Doc(object):
         g("set output '%s/%s.png'" % (self.directory,filename))
 
     def initGnuplot2D(self,filename="plot",xlabel=None,ylabel=None,title=None,xrange_=None,yrange=None,x_logscale=0,y_logscale=0):
-        import Gnuplot
         g = Gnuplot.Gnuplot(debug=0)
         self.setTerminal(g,filename)
+        # pylint: disable=C0321
         if xlabel is not None: g.xlabel(xlabel)
         if ylabel is not None: g.ylabel(ylabel)
         if title is not None: g.title(title)
@@ -101,9 +101,9 @@ class Doc(object):
         return g
 
     def initGnuplot3D(self,filename="plot3D",xlabel=None,ylabel=None,zlabel=None,title=None,xrange_=None,yrange=None,zrange=None,x_logscale=0,y_logscale=0,z_logscale=0):
-        import Gnuplot
         g = Gnuplot.Gnuplot(debug=0)
         self.setTerminal(g,filename)
+        # pylint: disable=C0321
         if xlabel is not None: g.xlabel(xlabel)
         if ylabel is not None: g.ylabel(ylabel)
         if zlabel is not None: g("set zlabel '%s'" % zlabel)
@@ -151,9 +151,9 @@ class Doc(object):
 
         for name,var in system.variables.items():
             if isinstance(var,OutputVariable) and isinstance(var.defuzzify,fuzzy.defuzzify.Dict.Dict):
-                print "ignore variable %s because it is of type OutputVariable => Dict" % name
+                sys.stderr.write("ignore variable %s because it is of type OutputVariable => Dict\n" % name)
             elif isinstance(var,InputVariable) and isinstance(var.fuzzify,fuzzy.fuzzify.Dict.Dict):
-                print "ignore variable %s because it is of type InputVariable => Dict" % name
+                sys.stderr.write("ignore variable %s because it is of type InputVariable => Dict\n" % name)
             else:
                 self.createDocVariable(var,name)
 
@@ -165,14 +165,12 @@ class Doc(object):
     def createDocSets(self,sets,name,x_logscale=0,y_logscale=0,description=None,units=None):
         """Creates a 2D plot of dict of sets"""
 
-        import Gnuplot
-        import Gnuplot.funcutils
         import fuzzy.set.Polygon
 
         # sort sets by lowest x values and higher membership values next
         def sort_key(a):
             s = sets[a]
-            x = s.getIntervalGenerator().nextInterval(None,None)
+            x = s.getValuesX().next()
             return (x,-s(x))
 
         (x_min,x_max,x) = self.getValuesSets(sets)
@@ -197,7 +195,7 @@ class Doc(object):
         g.plot(*plot_items)
         g.close()
 
-    def create2DPlot(self,system,x_name,y_name,input_dict={},output_dict={},x_logscale=0,y_logscale=0):
+    def create2DPlot(self,system,x_name,y_name,input_dict=None,output_dict=None,x_logscale=0,y_logscale=0):
         """Creates a 2D plot of an input variable and an output variable.
         Other (const) variables have to be set beforehand in the dictionary input_dict.
         
@@ -217,17 +215,12 @@ class Doc(object):
         @type y_logscale: bool
         """
 
-        import Gnuplot
-        import Gnuplot.funcutils
+        input_dict = input_dict or {}
+        output_dict = output_dict or {}
 
         (x_min,x_max,x) = self.getValues(system.variables[x_name])
 
-        def f(x,
-                system=system,
-                x_name=x_name,
-                y_name=y_name,
-                input_dict=input_dict,
-                output_dict=output_dict):
+        def f(x):
             input_dict[x_name] = x
             output_dict[y_name] = 0.0
 
@@ -240,7 +233,7 @@ class Doc(object):
         g.plot(Gnuplot.funcutils.compute_Data(x, f))
         g.close()
 
-    def create3DPlot(self,system,x_name,y_name,z_name,input_dict={},output_dict={},x_logscale=0,y_logscale=0,z_logscale=0):
+    def create3DPlot(self,system,x_name,y_name,z_name,input_dict=None,output_dict=None,x_logscale=0,y_logscale=0,z_logscale=0):
         """Creates a 3D plot of 2 input variables and an output variable.
         Other (const) variables have to be set beforehand in the dictionary input_dict.
         
@@ -263,20 +256,13 @@ class Doc(object):
         @param z_logscale: use logarithmic scale for z values
         @type z_logscale: bool
         """
-
-        import Gnuplot
-        import Gnuplot.funcutils
+        input_dict = input_dict or {}
+        output_dict = output_dict or {}
 
         (x_min,x_max,x) = self.getValues(system.variables[x_name])
         (y_min,y_max,y) = self.getValues(system.variables[y_name])
 
-        def f(x,y,
-                system=system,
-                x_name=x_name,
-                y_name=y_name,
-                z_name=z_name,
-                input_dict=input_dict,
-                output_dict=output_dict):
+        def f(x,y):
             input_dict[x_name] = x
             input_dict[y_name] = y
             output_dict[z_name] = 0.0
@@ -290,7 +276,7 @@ class Doc(object):
         g.close()
 
 
-    def create3DPlot_adjective(self,system,x_name,y_name,z_name,adjective,input_dict={},output_dict={},x_logscale=0,y_logscale=0,z_logscale=0):
+    def create3DPlot_adjective(self,system,x_name,y_name,z_name,adjective,input_dict=None,output_dict=None,x_logscale=0,y_logscale=0,z_logscale=0):
         """Creates a 3D plot of 2 input variables and an adjective of the output variable.
         Other (const) variables have to be set beforehand in the dictionary input_dict.
         
@@ -315,21 +301,13 @@ class Doc(object):
         @param z_logscale: use logarithmic scale for z values
         @type z_logscale: bool
         """
-
-        import Gnuplot
-        import Gnuplot.funcutils
+        input_dict = input_dict or {}
+        output_dict = output_dict or {}
 
         (x_min,x_max,x) = self.getValues(system.variables[x_name])
         (y_min,y_max,y) = self.getValues(system.variables[y_name])
 
-        def f(x,y,
-                system=system,
-                x_name=x_name,
-                y_name=y_name,
-                z_name=z_name,
-                adjective=adjective,
-                input_dict=input_dict,
-                output_dict=output_dict):
+        def f(x,y):
             input_dict[x_name] = x
             input_dict[y_name] = y
             output_dict[z_name] = 0.0
