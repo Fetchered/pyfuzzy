@@ -1,0 +1,40 @@
+# -*- coding: utf-8 -*-
+$Id: TODO,v 1.8 2010-03-28 18:50:22 rliebscher Exp $
+
+Releases:
+- Release files for SourceForge when pyfuzzy will be considered as 'stable enough'
+
+
+Variables:
+? Manage correctly min & max for Variables
+    - if input_value > max : input_value = max (idem with < min)
+    (Is this really necessary, as fuzzy sets can easily go to -/+inf)
+
+? Manage Variable precision
+
+
+GUI:
+- GUI using Tkinter and Tix so it works on all platforms supported by python without extra libraries
+
+(fuzzui no longer developed, throw it out?)
+- Gui to manage fuzzy systems (wxPython)
+	- [DONE] Manage pickle systems
+    - [75%] (add/del/edit) Variable
+    - (add/del/edit) Adjectives
+    - (add/del/edit) Rules
+    - Documentation generation
+    - import / export XML format
+	- complete interactive GUI, maybe using OGL (http://tltsu.ru/wxpython-2.3.2/docs/ogl/index.htm) to manage drag & drop, and kind of wires.
+
+Import/Export:
+- xml export/import
+- pickle is easy (also support users extensions?)
+
+- manage projects
+	- [DONE] Pickle (see mischer.py)
+	- XML
+
+Documentation of fuzzy system:    
+- [50 % DONE] Automatic generation of documentation for variables (see doc.py)
+- documentation of rules
+

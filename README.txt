@@ -2,7 +2,7 @@
 
 
                              Python Fuzzy
-                             release 0.1.0
+                             release 0.1.1
                            October 18th, 2009
 
 
@@ -107,7 +107,6 @@ or use the project page at http://sourceforge.net/projects/pyfuzzy
 ACKNOWLEDGMENTS
 ---------------
 
-
 Main contributors:
   * René Liebscher (2002-2009): current maintainer
         - initial version
@@ -126,4 +125,4 @@ Others:
         - example "analyse" (not included here, see webpage)
 
 
-$Id: README.txt,v 1.6 2009/10/18 19:52:23 rliebscher Exp $
+$Id: README.txt,v 1.7 2010-03-28 18:50:22 rliebscher Exp $
