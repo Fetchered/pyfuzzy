@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,26 +9,35 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: Plain.py,v 1.2 2009/08/07 07:19:18 rliebscher Exp $"
+"""Fuzzification which sets adjectives values according their set memberships for given value."""
+
+__revision__ = "$Id: Plain.py,v 1.7 2010-10-29 19:24:41 rliebscher Exp $"
 
 
 from fuzzy.fuzzify.Base import Base
 
 
-class Plain(Base):
+class Plain(Base): # pylint: disable=R0903
     """Just fuzzify the input value using the membership values of the given adjectives"""
 
-    def __init__(self,*args,**keywords):
-        super(Plain, self).__init__(*args,**keywords)
+    def __init__(self, *args, **keywords):
+        super(Plain, self).__init__(*args, **keywords)
 
-    def setValue(self,variable,value):
-        """Let adjectives calculate their membership values."""
+    def setValue(self, variable, value):
+        """Let adjectives calculate their membership values.
+        
+           @param variable: variable which adjective to set
+           @type variable: L{fuzzy.Variable.Variable}
+           @param variable: value to set the adjectives
+           @type: float
+           """
         for adjective in variable.adjectives.values():
             adjective.setMembershipForValue(value)
         return value

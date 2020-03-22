@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,19 +9,21 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: Dict.py,v 1.3 2009/08/31 21:02:06 rliebscher Exp $"
+"""Fuzzification which sets adjectives values according the values in given dictionary."""
 
+__revision__ = "$Id: Dict.py,v 1.8 2010-10-29 19:24:41 rliebscher Exp $"
 
 from fuzzy.fuzzify.Base import Base
 
 
-class Dict(Base):
+class Dict(Base): # pylint: disable=R0903
     """Fuzzification method which gets adjective memberships
        in a dictionary instead of values to fuzzify.
        You should use in the adjectives instances of Set itself.
@@ -52,11 +54,18 @@ class Dict(Base):
 
       """
 
-    def __init__(self,*args,**keywords):
-        super(Dict,self).__init__(*args,**keywords)
+    def __init__(self, *args, **keywords):
+        super(Dict, self).__init__(*args, **keywords)
 
-    def setValue(self,variable,value):
-        """Do not let adjectives calculate their membership values."""
+    def setValue(self, variable, value):
+        """Do not let adjectives calculate their membership values.
+           Instead use the provided values from dictionary.
+           
+           @param variable: variable which adjective to set
+           @type variable: L{fuzzy.Variable.Variable}
+           @param variable: values to set the adjectives
+           @type: dict
+           """
         for adjective_key in value:
             variable.adjectives[adjective_key].membership = value[adjective_key]
         return None

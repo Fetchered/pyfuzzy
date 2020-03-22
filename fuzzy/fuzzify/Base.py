@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,20 +9,38 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: Base.py,v 1.2 2009/08/07 07:19:18 rliebscher Exp $"
+"""base class for all fuzzification methods"""
+
+__revision__ = "$Id: Base.py,v 1.7 2010-10-29 19:24:41 rliebscher Exp $"
 
 
-class Base(object):
+class Base(object): # pylint: disable=R0903
     """base class for all fuzzification methods"""
 
-    def __init__(self,*args,**keywords):
-        super(Base, self).__init__(*args,**keywords)
+    def __init__(self, *args, **keywords):
+        super(Base, self).__init__(*args, **keywords)
 
-    def setValue(self,variable,value):
-        pass
+    def setValue(self, variable, value):
+        """Set value to adjectives of variable.
+        
+           @param variable: variable which adjective to set
+           @type variable: L{fuzzy.Variable.Variable}
+           @param variable: value to set the adjectives
+           @type: any
+           """
+        raise NotImplementedError()
+
+    def __repr__(self):
+        """Return representation of instance.
+                   
+           @return: representation of instance
+           @rtype: string
+           """
+        return "%s.%s()" % (self.__class__.__module__, self.__class__.__name__)
