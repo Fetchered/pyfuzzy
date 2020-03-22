@@ -1,6 +1,3 @@
--*- coding: utf-8 -*-
-
-
                              Python Fuzzy
                              release 0.1.1
                            October 18th, 2009
@@ -18,12 +15,12 @@ REQUIREMENTS
 
 This release of the pyfuzzy requires Python 2.5 or later.
 
-
 For generation documentation from the source distribution, you need the
 Python internal pydoc or better epydoc (http://epydoc.sourceforge.net).
 
 For reading FCL files you need the ANTLR3 python runtime.
-(http://www.antlr.org/wiki/display/ANTLR3/Python+runtime)
+(https://www.antlr3.org/download.html) or just
+pip install antlr3-python-runtime
 
 For generating plots of your variables or functional dependencies
 (also for some tests) you need gnuplot 4.2/4.3 and Gnuplot.py 1.8
