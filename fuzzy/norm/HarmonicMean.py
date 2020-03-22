@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,22 +9,24 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: HarmonicMean.py,v 1.5 2009/08/07 07:19:19 rliebscher Exp $"
+__revision__ = "$Id: HarmonicMean.py,v 1.8 2009-10-27 20:06:27 rliebscher Exp $"
 
-from fuzzy.norm.Norm import Norm,sum
+from fuzzy.norm.Norm import Norm, sum
 
 class HarmonicMean(Norm):
 
     def __init__(self):
-        Norm.__init__(self,0)
+        super(HarmonicMean, self).__init__(Norm.UNKNOWN)
 
-    def __call__(self,*args):
+    def __call__(self, *args):
+        args = self.checkArgsN(args)
         if 0. in args:
             return 0.
         return float(len(args))/sum(*[1.0/x for x in args])

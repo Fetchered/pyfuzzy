@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,19 +9,20 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 """ 
     Abstract base class for any kind of fuzzy norm.
 """
 
-__revision__ = "$Id: Norm.py,v 1.11 2009/08/07 07:19:19 rliebscher Exp $"
+__revision__ = "$Id: Norm.py,v 1.16 2010-02-17 19:45:00 rliebscher Exp $"
 
-from fuzzy.Exception import Exception
-class NormException(Exception):
+from fuzzy.Exception import FuzzyException
+class NormException(FuzzyException):
     """Base class for any exception in norm calculations."""
     pass
 
@@ -34,11 +35,11 @@ class Norm(object):
     T_NORM = 1 #: norm is t-norm
     S_NORM = 2 #: norm is s-norm
 
-    def __init__(self,type=0):
+    def __init__(self, type=UNKNOWN):
         """Initialize type of norm"""
         self._type = type
 
-    def __call__(self,*args):
+    def __call__(self, *args):
         """
             Calculate result of norm(arg1,arg2,...)
         
@@ -48,7 +49,7 @@ class Norm(object):
             @rtype: float
             @raise NormException: any problem in calculation (wrong number of arguments, numerical problems)
         """
-        raise NormException("abstract class %s can't be called" % self.__class__.__name__)
+        raise NotImplementedError("abstract class %s can't be called" % self.__class__.__name__)
 
     def getType(self):
         """
@@ -59,8 +60,39 @@ class Norm(object):
 
         """
         return self._type
+    
+    def checkArgs2(self, args):
+        """Checks args to be 2 float values.
+    
+        @param args: list of arguments
+        @type args: list of float?
+        @return: first two args as float values
+        @rtype: (float,float)
+        """
+        if len(args) != 2:
+            raise NormException("%s is supported only for 2 arguments" % self.__class__.__name__ )
+        return float(args[0]), float(args[1])
 
+    def checkArgsN(self, args):
+        """Checks args to be at least 2 float values.
+    
+        @param args: list of arguments
+        @type args: list of float?
+        @return: arguments as float values
+        @rtype: list of float
+        """
+        if len(args) < 2:
+            raise NormException("%s is supported only for more the 2 arguments" % self.__class__.__name__ )
+        return [float(x) for x in args]
 
+    def __repr__(self):
+        """Return representation of instance.
+                   
+           @return: representation of instance
+           @rtype: string
+           """
+        return "%s.%s()" % (self.__class__.__module__, self.__class__.__name__)
+   
 def product(*args):
     """Calculate product of args.
 

@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,26 +9,24 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: DrasticSum.py,v 1.4 2009/08/31 21:02:06 rliebscher Exp $"
+__revision__ = "$Id: DrasticSum.py,v 1.7 2009-10-27 20:06:27 rliebscher Exp $"
 
-from fuzzy.norm.Norm import Norm,NormException
+from fuzzy.norm.Norm import Norm
 
 class DrasticSum(Norm):
 
     def __init__(self):
-        Norm.__init__(self,Norm.S_NORM)
+        super(DrasticSum, self).__init__(Norm.S_NORM)
 
-    def __call__(self,*args):
-        if len(args) != 2:
-            raise NormException("%s is supported only for 2 parameters" % self.__class__.__name__ )
-        x = float(args[0])
-        y = float(args[1])
+    def __call__(self, *args):
+        x, y = self.checkArgs2(args)
         if y == 0.0:
             return x
         if x == 0.0:
