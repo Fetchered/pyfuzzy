@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,13 +9,14 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 """Represents a fuzzy rule."""
-__revision__ = "$Id: Rule.py,v 1.13 2009/10/07 21:08:13 rliebscher Exp $"
+__revision__ = "$Id: Rule.py,v 1.17 2010-02-17 19:57:13 rliebscher Exp $"
 
 from fuzzy.norm.Min import Min
 
@@ -39,7 +40,7 @@ class Rule(object):
     # default if not set in instance
     _CER = Min()
 
-    def __init__(self,adjective,operator,certainty=1.0,CER=None):
+    def __init__(self, adjective, operator, certainty=1.0, CER=None):
         """Initialize instance.
            @param adjective: fuzzy adjective to set
            @type adjective: L{fuzzy.Adjective.Adjective}
@@ -60,14 +61,14 @@ class Rule(object):
         """Compute and set value for given fuzzy adjective."""
 
         import fuzzy.Adjective
-        if isinstance(self.adjective,fuzzy.Adjective.Adjective):
+        if isinstance(self.adjective, fuzzy.Adjective.Adjective):
             self.adjective.setMembership(
                                     (self.CER or self._CER)(
                                         self.certainty,       # how sure are we about this rule
                                         self.operator() # value from input
                                     )
                                 )
-        elif isinstance(self.adjective,list):
+        elif isinstance(self.adjective, list):
             for adj in self.adjective:
                 adj.setMembership(
                                     (self.CER or self._CER)(
@@ -76,8 +77,22 @@ class Rule(object):
                                     )
                                 )
         else:
-            raise Exception("rule target not set.")
+            from fuzzy.Exception import FuzzyException
+            raise FuzzyException("rule target not set.")
 
-    def getName(self,system):
+    def getName(self, system):
         """Lookup the name given this rule in the given system"""
         return system.findRuleName(self)
+
+    def __repr__(self):
+        """Return representation of instance.
+                   
+           @return: representation of instance
+           @rtype: string
+           """
+        params = []
+        params.append("adjective=%s" % object.__repr__(self.adjective))
+        params.append("operator=%s" % repr(self.operator))
+        if self.certainty != 1.0: params.append("certainty=%s" % self.certainty)
+        if self.CER: params.append("CER=%s" % repr(self.CER))
+        return "%s.%s(%s)" % (self.__class__.__module__, self.__class__.__name__, ", ".join(params))

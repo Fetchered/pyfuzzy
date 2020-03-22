@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,16 +9,16 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 """Base class for any kind of exceptions used by this package."""
-__revision__ = "$Id: Exception.py,v 1.5 2009/10/07 21:08:12 rliebscher Exp $"
+__revision__ = "$Id: Exception.py,v 1.8 2010-01-19 21:45:35 rliebscher Exp $"
 
 
-import exceptions
-class Exception(exceptions.Exception):
+class FuzzyException(Exception):
     """Base class for any kind of exceptions used by this package."""
     pass

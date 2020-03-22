@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,13 +9,14 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 """Describes a ... of a variable."""
-__revision__ = "$Id: Adjective.py,v 1.13 2009/10/07 21:08:12 rliebscher Exp $"
+__revision__ = "$Id: Adjective.py,v 1.16 2010-02-17 19:57:13 rliebscher Exp $"
 
 
 from fuzzy.norm.Max import Max
@@ -36,8 +37,9 @@ class Adjective(object):
 
     # default if not set in instance
     _COM = Max()
+    _set = Set()
 
-    def __init__(self,set=Set(),COM=None):
+    def __init__(self, set=None, COM=None):
         """Initialize adjective.
         
         @param set: fuzzy set
@@ -45,11 +47,11 @@ class Adjective(object):
         @param COM: norm (if None the class default _COM is used.)
         @type COM: L{fuzzy.norm.Norm.Norm}
         """
-        self.set = set
+        self.set = set or Adjective._set
         self.membership = None
         self.COM = COM
 
-    def setMembershipForValue(self,value):
+    def setMembershipForValue(self, value):
         """Get membership for an input value from the fuzzy set."""
         self.membership = self.set(value)
 
@@ -60,7 +62,7 @@ class Adjective(object):
         else:
             return self.membership
 
-    def setMembership(self,value):
+    def setMembership(self, value):
         """Set membership of this adjective as result 
            of a rule calculation, 
            if already set use COM norm to merge
@@ -78,7 +80,18 @@ class Adjective(object):
         """Reset membership to unknown value (None)."""
         self.membership = None
 
-    def getName(self,system):
+    def getName(self, system):
         """Find own name in given system.
         Returns a tuple (var_name,adj_name) of None."""
         return system.findAdjectiveName(self)
+
+    def __repr__(self):
+        """Return representation of instance.
+                   
+           @return: representation of instance
+           @rtype: string
+           """
+        params = []
+        if self.set is not Adjective._set: params.append("set=%s" % repr(self.set))
+        if self.COM: params.append("COM=%s" % repr(self.COM))
+        return "%s.%s(%s)" % (self.__class__.__module__, self.__class__.__name__, ", ".join(params))
