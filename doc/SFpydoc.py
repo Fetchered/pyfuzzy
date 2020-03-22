@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Creates a pydoc documentation, but replaces all file link with links
 # to the CVS repository browser
@@ -13,14 +13,15 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
 
-__revision__ = "$Id: SFpydoc.py,v 1.6 2009/08/31 21:03:01 rliebscher Exp $"
+__revision__ = "$Id: SFpydoc.py,v 1.8 2009-10-27 20:07:44 rliebscher Exp $"
 
 from mypydoc import MyHTMLDoc
 import pydoc
