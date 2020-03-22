@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,15 +9,16 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
 """Generates description of structure in dot format"""
 
-__revision__ = "$Id: dot.py,v 1.4 2009/08/07 07:19:18 rliebscher Exp $"
+__revision__ = "$Id: dot.py,v 1.7 2010-01-21 20:54:44 rliebscher Exp $"
 
 # stores handler of different object types
 _registered_handler = {}
@@ -60,4 +61,4 @@ def print_footer(out):
     out.write("}\n")
 
 # import handlers for object types
-import fuzzy.doc.structure.dot.handlers
+import fuzzy.doc.structure.dot.handlers #@UnusedImport

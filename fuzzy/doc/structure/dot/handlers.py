@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,15 +9,16 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
 """Handlers for different object types which print the object in dot format"""
 
-__revision__ = "$Id: handlers.py,v 1.5 2009/08/07 07:19:18 rliebscher Exp $"
+__revision__ = "$Id: handlers.py,v 1.8 2010-02-17 19:52:28 rliebscher Exp $"
 
 
 from fuzzy.doc.structure.dot.dot import register_handler,print_dot
@@ -169,8 +170,8 @@ class Doc_Adjective(DocBase):
 
 import fuzzy.Adjective
 register_handler(fuzzy.Adjective.Adjective,Doc_Adjective())
-import fuzzy.AdjectiveProxy
-register_handler(fuzzy.AdjectiveProxy.AdjectiveProxy,Doc_Adjective())
+#import fuzzy.AdjectiveProxy
+#register_handler(fuzzy.AdjectiveProxy.AdjectiveProxy,Doc_Adjective())
 
 #########################
 class Doc_Rule(DocBase):
