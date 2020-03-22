@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,18 +9,19 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 """The Compound class takes values of several input operators  and 
 processes them through a given norm."""
-__revision__ = "$Id: Compound.py,v 1.12 2009/10/07 21:08:14 rliebscher Exp $"
+__revision__ = "$Id: Compound.py,v 1.16 2010-10-29 19:24:41 rliebscher Exp $"
 
 from fuzzy.operator.Operator import Operator
 
-class Compound(Operator):
+class Compound(Operator): # pylint: disable=R0903
     """Take values of input operators  and process them
        through the given norm.
 
@@ -43,3 +44,16 @@ class Compound(Operator):
     def __call__(self):
         """Get current value of input and combine them with help of norm."""
         return self.norm(*[x() for x in self.inputs])
+
+    def __repr__(self):
+        """Return representation of instance.
+                   
+           @return: representation of instance
+           @rtype: string
+           """
+        return "%s.%s(norm=%s, inputs=%s)" % (
+                self.__class__.__module__,
+                self.__class__.__name__,
+                repr(self.norm),
+                repr(self.inputs),
+            )

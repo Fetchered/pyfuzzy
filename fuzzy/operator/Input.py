@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,24 +9,25 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 """Special operator class which gets it value from a fuzzy adjective."""
-__revision__ = "$Id: Input.py,v 1.12 2009/10/07 21:08:14 rliebscher Exp $"
+__revision__ = "$Id: Input.py,v 1.16 2010-10-29 19:24:41 rliebscher Exp $"
 
 from fuzzy.operator.Operator import Operator
 
-class Input(Operator):
+class Input(Operator): # pylint: disable=R0903
     """Special operator which gets it value from a fuzzy adjective.
        
        @ivar adjective: from which adjective get the membership value.
        @type adjective: L{fuzzy.Adjective.Adjective}
     """
 
-    def __init__(self,adjective):
+    def __init__(self, adjective):
         """Constructor.
         
         @param adjective: from which adjective get the membership value.
@@ -38,3 +39,11 @@ class Input(Operator):
     def __call__(self):
         """return membership of given adjective."""
         return self.adjective.getMembership()
+
+    def __repr__(self):
+        """Return representation of instance.
+                   
+           @return: representation of instance
+           @rtype: string
+           """
+        return "%s.%s(%s)" % (self.__class__.__module__, self.__class__.__name__, object.__repr__(self.adjective))

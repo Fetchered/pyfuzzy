@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2009  Rene Liebscher
 #
@@ -9,24 +9,25 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 """Special operator class which returns a constant value."""
-__revision__ = "$Id: Const.py,v 1.11 2009/10/07 21:08:14 rliebscher Exp $"
+__revision__ = "$Id: Const.py,v 1.15 2010-10-29 19:24:41 rliebscher Exp $"
 
 from fuzzy.operator.Operator import Operator
 
-class Const(Operator):
+class Const(Operator): # pylint: disable=R0903
     """Special operator which returns a constant value.
        
        @ivar value: value returned at call of __call__().
        @type value: float
     """
 
-    def __init__(self,value):
+    def __init__(self, value):
         """Constructor.
         
         @param value: value returned at call of __call__().
@@ -38,3 +39,11 @@ class Const(Operator):
     def __call__(self):
         """Return stored constant value."""
         return self.value
+
+    def __repr__(self):
+        """Return representation of instance.
+                   
+           @return: representation of instance
+           @rtype: string
+           """
+        return "%s.%s(%s)" % (self.__class__.__module__, self.__class__.__name__, self.value)
