@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 """\
 # Generate plots of all available fuzzy set classes using their default values.
@@ -16,27 +16,28 @@
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT 
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
 # 
-# You should have received a copy of the GNU Lesser General Public License along with 
-# this program; if not, see <http://www.gnu.org/licenses/>. 
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>. 
 #
 
-__revision__ = "$Id: demo_set.py,v 1.14 2009/10/18 19:44:46 rliebscher Exp $"
+__revision__ = "$Id: demo_set.py,v 1.18 2010-01-19 21:57:09 rliebscher Exp $"
 
 import sys, os
-sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])),os.path.pardir))
+sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), os.path.pardir))
 
 try:
     # If the package has been installed correctly, this should work:
     import Gnuplot, Gnuplot.funcutils
 except ImportError:
-    print "Sorry, you need Gnuplot.py (http://gnuplot-py.sourceforge.net) to use this."
+    sys.stderr.write("Sorry, you need Gnuplot.py (http://gnuplot-py.sourceforge.net) to use this.\n")
     sys.exit(1)
 
 from utils import get_classes
 
-x_min,x_max = -1.5,+1.5
+x_min, x_max = -1.5, +1.5
 
 def getGnuplot():
     """Get a preconfigured Gnuplot instance for plotting."""
@@ -47,13 +48,13 @@ def getGnuplot():
     g(' set style fill solid 0.5 border')
     g('set style data filledcurves y1=0')
     g('set noautoscale xy')
-    g('set xrange [%f:%f]' % (x_min,x_max))
+    g('set xrange [%f:%f]' % (x_min, x_max))
     g('set yrange [-0.2:1.2]')
     g.xlabel('x')
     g.ylabel('y')
     return g
 
-def plot(set,title,filename,gnuplot=None,interactive=False):
+def plot(set, title, filename, gnuplot=None, interactive=False):
     """Demonstrate a set plot"""
     import fuzzy.set.Polygon
 
@@ -64,21 +65,22 @@ def plot(set,title,filename,gnuplot=None,interactive=False):
     g = gnuplot or getGnuplot()
     g.title(title)
 
-    print "Plot %s ... " % title
+    sys.stdout.write("Plot %s ... " % title)
     if interactive == False:
         g("set terminal png small truecolor nocrop")
         g("set output 'set/%s.png'" % filename)
-    if isinstance(set,fuzzy.set.Polygon.Polygon):
+    if isinstance(set, fuzzy.set.Polygon.Polygon):
         p = set.points
         if len(p) == 0:
             raise Exception("Polygon with 0 points found.")
         if p[0][0] > x_min:
-            p.insert(0,(x_min,p[0][1]))
+            p.insert(0, (x_min, p[0][1]))
         if p[-1][0] < x_max:
-            p.append((x_max,p[-1][1]))
+            p.append((x_max, p[-1][1]))
         g.plot(p)
     else:
-        g.plot(Gnuplot.funcutils.compute_Data(x,set))
+        g.plot(Gnuplot.funcutils.compute_Data(x, set))
+    sys.stdout.write("ok.\n")
     if interactive == True:
         raw_input('Please press return to continue...\n')
     if gnuplot is None:
@@ -86,7 +88,7 @@ def plot(set,title,filename,gnuplot=None,interactive=False):
     g = None
 
 
-def plotSet(s,name,gnuplot=None,interactive=False):
+def plotSet(s, name, gnuplot=None, interactive=False):
     """Plot a given set, using the names for the title/filename.
     
     If gnuplot is not None, use it for the plot, otherwise create a own instance.
@@ -94,7 +96,7 @@ def plotSet(s,name,gnuplot=None,interactive=False):
     """    
     title = "%s" % name
     filename = "%s" % name
-    plot(s,title,filename,gnuplot,interactive)
+    plot(s, title, filename, gnuplot, interactive)
 
 
 def test():
@@ -120,12 +122,12 @@ def test():
             (1.3,0.6),
         ])
     for name in sorted(objects):
-        if name in ["Set", "Function","Polygon"]:
+        if name in ["Set", "Function", "Polygon"]:
             continue
         obj = objects[name]
 
         try:
-            plotSet(obj,name)
+            plotSet(obj, name)
         except:
             import traceback
             traceback.print_exc()
@@ -138,12 +140,12 @@ def interactive(name):
     try:
         set = objects[name]
     except KeyError:
-        print "%s is unknown." % name 
+        sys.stderr.write("%s: %s is unknown.\n" % (sys.argv[0],name)) 
         return
 
     g = getGnuplot()
 
-    plotSet(set,name,gnuplot=g,interactive=True)
+    plotSet(set, name, gnuplot=g, interactive=True)
 
     g.close()
 
